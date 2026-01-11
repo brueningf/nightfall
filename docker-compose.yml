@@ -15,8 +15,6 @@ services:
     environment:
       - VIRTUAL_HOST=nightfall.fredesk.com
       - LETSENCRYPT_HOST=nightfall.fredesk.com
-      - VIRTUAL_PROTO=https
-      - VIRTUAL_PORT=443
     networks:
       - default
 
