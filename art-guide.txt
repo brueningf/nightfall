@@ -1,0 +1,24 @@
+Nightfall: Visual Script & Art Guide
+Art Direction
+Atmosphere: Dark, gritty, cinematic, dystopian sci-fi.
+Color Palette:
+Primary: Deep Blacks/Greys (Shadows, Void).
+Accent 1: Ominous Dark Red (Shattered Sun, Demon Eyes).
+Accent 2: Glowing Cyan/Electric Blue (Shard Light, Fissures, Tech).
+Key Elements: Shattered Sun (Dark sphere with red cracks), Earth Fissures (Cyan glow), High-tech brutalist architecture.
+Scene 1: The Shattered Sun
+Context: The opening shot establishing the world state.
+Visual Description: A massive, shattered sun hangs in the eternal night sky. It is a black void sphere cracked open, leaking angry dark red energy (magma-like). Below, a desolate landscape of jagged rocks. In the distance, the "Last Fortress" stands on a cliff—a mix of high-tech metal and defensive walls. The ground is split by fissures glowing with faint cyan light.
+Prompt: A shattered sun in the night sky, cracking with dark red energy. A desolate landscape with a lone futuristic fortress on a cliff. Faint blue cyan light glowing from cracks in the ground. Dark, atmospheric, cinematic sci-fi art.
+Scene 2: The Fall of Cities
+Context: Backstory showing the destruction of civilization.
+Visual Description: Ruins of a once-great futuristic metropolis in the year 60,057. Massive skyscrapers are toppling over, crumbling into widening glowing cyan fissures in the earth. The city is dark, abandoned, and overgrown with shadows. The red light of the shattered sun casts long, eerie shadows. Small silhouettes of demons can be seen lurking in the rubble.
+Prompt: Futuristic city in ruins, year 60057. Massive skyscrapers collapsing into glowing cyan fissures in the ground. Shadows of demons lurking in the rubble. The city is destroyed and desolate. Shattered red sun in the sky. Dark dystopian sci-fi concept art.
+Scene 3: The Shard Light (Survival)
+Context: How humanity survives inside the fortress.
+Visual Description: Interior of a high-tech hydroponics bay or underground settlement. Survivors are gathered around large, glowing cyan crystals ("Shards"). These crystals provide the only light and allow strange, hardy crops to grow in vertical farming racks. The atmosphere is cramped but hopeful. Outside a thick window, the dark red world is visible, contrasting with the safe blue light inside.
+Prompt: Interior of a high-tech fortress survival bay. Humans gathering around large glowing cyan crystals (Shard Light). Vertical hydroponic farms growing crops under the blue light. Industrial sci-fi architecture. Contrast between the safe blue light inside and the dark red world visible through a window.
+Scene 4: The Demon Siege (The Threat)
+Context: The immediate danger facing the player.
+Visual Description: A massive battle scene outside the fortress walls. A swarm of hundreds of "Void Demons"—creatures made of shadow and ember—are charging the defenses. Gigantic "Behemoth" demons tower over the swarm. The fortress cannons are firing bright beams of light energy into the horde. The Shattered Sun looms overhead, watching the destruction.
+Prompt: Epic wide shot of a massive war scene. Hundreds of shadow void demons swarming the high-tech fortress walls, including massive gigantic behemoth demons. The fortress is firing defensive beams of bright light energy. The Shattered Sun is a dark sphere cracking with red energy in the sky. Glowing cyan fissures in the desolate ground. Cinematic sci-fi concept art.
