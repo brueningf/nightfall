@@ -1,7 +1,7 @@
 // Enhanced Audio Controller with File-Based Music & Generative SFX
 class AudioController {
     private ctx: AudioContext | null = null;
-    private enabled: boolean = false;
+
     private masterGain: GainNode | null = null;
     private musicGain: GainNode | null = null;
     private sfxGain: GainNode | null = null;
@@ -9,7 +9,7 @@ class AudioController {
     // Track Management
     private currentAudio: HTMLAudioElement | null = null;
     private currentTrack: 'MENU' | 'GAME' | 'VICTORY' | 'DEFEAT' | null = null;
-    private trackSource: MediaElementAudioSourceNode | null = null;
+
 
     // Effects
     private delayNode: DelayNode | null = null;
@@ -52,7 +52,7 @@ class AudioController {
         this.feedbackNode.connect(this.delayNode);
         this.delayNode.connect(this.masterGain);
 
-        this.enabled = true;
+        this.delayNode.connect(this.masterGain);
     }
 
     // Public method to be called on user interaction
@@ -220,12 +220,11 @@ class AudioController {
             try {
                 const source = this.ctx.createMediaElementSource(this.currentAudio);
                 source.connect(this.musicGain);
-                this.trackSource = source;
             } catch (e) {
                 // Ignore re-connection errors if we partly initialized
             }
 
-            this.currentAudio.play().catch(e => {
+            this.currentAudio.play().catch(() => {
                 // Expected if no interaction yet. Will be handled by resume().
                 console.warn("Audio waiting for interaction...");
             });

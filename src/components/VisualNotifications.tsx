@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { GameNotification, GameState } from '../engine/types';
+import type { GameNotification } from '../engine/types';
 import { Icon } from '@iconify/react';
 import '../index.css';
 

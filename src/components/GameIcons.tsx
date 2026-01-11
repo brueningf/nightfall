@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from '@iconify/react';
 
 export const SoldierIcon = ({ count = 1, className = "" }: { count?: number, className?: string }) => {
@@ -35,7 +34,7 @@ export const FarmerIcon = ({ count = 1, className = "" }: { count?: number, clas
     );
 };
 
-export const HeroIcon = ({ level = 1, className = "" }: { level?: number, className?: string }) => (
+export const HeroIcon = ({ className = "" }: { level?: number, className?: string }) => (
     <Icon
         icon="game-icons:power-armor"
         className={`icon-hero ${className}`}

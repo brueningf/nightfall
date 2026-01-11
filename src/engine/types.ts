@@ -186,10 +186,6 @@ export const INITIAL_STATE: GameState = {
             id: 'CORE_STABILIZATION',
             name: "The Ignition Protocol",
             description: "Reignite the Incendium Core. Requires 2000 Shards. Starts THE FINAL STAND.",
-            cost: 2000, // Actually cost is Shards, but research system uses Knowledge. Wait. Use cost 0/1 here?
-            // Actually, let's make it a SPECIAL tech. We can implement it as a button that appears when you have the Shards and maybe max tech?
-            // Or make it a researchable tech that costs KNOWLEDGE to unlock the ability, then SHARDS to activate?
-            // "Unlock Core Stabilization Tech" -> Then Button "IGNITE (2000 Shards)"
             // Let's make it a tech you research for 1000 Knowledge.
             cost: 500, // High knowledge cost
             unlocked: false

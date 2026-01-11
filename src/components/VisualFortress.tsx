@@ -4,7 +4,6 @@ import { SoldierIcon, FarmerIcon, HeroIcon } from './GameIcons';
 
 // Import images
 // fortressBase removed, using public/fortress_window.png directly
-import snowOverlay from '../assets/overlay_snow.png';
 import fireOverlay from '../assets/overlay_fire.png';
 
 import { VisualNotifications } from './VisualNotifications';
