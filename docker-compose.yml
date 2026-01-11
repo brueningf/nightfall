@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  nightfall:
+    image: node:18-alpine
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - .:/app
+    # Install, build, and serve. 
+    # This keeps it "lightweight" in terms of configuration (no Dockerfile), 
+    # though it builds on startup.
+    command: /bin/sh -c "npm install && npm run build && npx serve -s dist -l 80"
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=nightfall.fredesk.com
+      - LETSENCRYPT_HOST=nightfall.fredesk.com
+      - VIRTUAL_PROTO=http
+      - VIRTUAL_PORT=80
+    networks:
+      - default
+
+networks:
+  default:
+    name: www
+    external: true

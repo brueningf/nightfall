@@ -8,19 +8,18 @@ import { VictoryScreen } from './components/VictoryScreen';
 import { INITIAL_STATE } from './engine/types';
 import type { GameState, TechId } from './engine/types';
 import { processTurn, startResearch, banishDemons, igniteCore } from './engine/engine';
-import { TechModal } from './components/TechModal';
+import { ResearchScreen } from './components/ResearchScreen';
 import { audioController } from './engine/audio';
 import { saveGame, loadGame, clearSave } from './engine/persistence';
 
 import { SettingsScreen } from './components/SettingsScreen';
 import { ScoresScreen } from './components/ScoresScreen';
 
-type Screen = 'MENU' | 'GAME' | 'INFO' | 'GAMEOVER' | 'VICTORY' | 'SETTINGS' | 'SCORES';
+type Screen = 'MENU' | 'GAME' | 'INFO' | 'GAMEOVER' | 'VICTORY' | 'SETTINGS' | 'RESEARCH' | 'SCORES';
 
 function App() {
     const [screen, setScreen] = useState<Screen>('MENU');
     const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
-    const [showTech, setShowTech] = useState(false);
     const [isShaking, setIsShaking] = useState(false);
 
     // Audio State Management
@@ -82,7 +81,7 @@ function App() {
             return next;
         });
         audioController.playStart(); // Epic sound?
-        setShowTech(false); // Close modal to show the event log
+        setScreen('GAME'); // Close modal to show the event log
     };
 
     const handleTurn = () => {
@@ -191,19 +190,20 @@ function App() {
                         onAllocate={handleAllocate}
                         onNextTurn={handleTurn}
                         onSetStance={handleStance}
-                        onOpenTech={() => setShowTech(true)}
+                        onOpenTech={() => setScreen('RESEARCH')}
                         onBanish={handleBanish}
                         onMenu={() => setScreen('MENU')}
                     />
-                    {showTech && (
-                        <TechModal
-                            state={gameState}
-                            onClose={() => setShowTech(false)}
-                            onResearch={handleResearch}
-                            onIgnite={handleIgnite}
-                        />
-                    )}
                 </>
+            )}
+
+            {screen === 'RESEARCH' && (
+                <ResearchScreen
+                    state={gameState}
+                    onBack={() => setScreen('GAME')}
+                    onResearch={handleResearch}
+                    onIgnite={handleIgnite}
+                />
             )}
         </div>
     );

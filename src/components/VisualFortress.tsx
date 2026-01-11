@@ -7,6 +7,8 @@ import { SoldierIcon, FarmerIcon, HeroIcon } from './GameIcons';
 import snowOverlay from '../assets/overlay_snow.png';
 import fireOverlay from '../assets/overlay_fire.png';
 
+import { VisualNotifications } from './VisualNotifications';
+
 interface VisualFortressProps {
     state: GameState;
 }
@@ -23,8 +25,11 @@ export const VisualFortress: React.FC<VisualFortressProps> = ({ state }) => {
 
     return (
         <div className="visual-fortress-container">
+            {/* Notifications Overlay */}
+            <VisualNotifications notifications={state.notifications} currentTurn={state.turn} />
+
             {/* Base Layer */}
-            <img src="/fortress_window.png" className="layer base" alt="Fortress" />
+            <img src="/fortress_window.jpg" className="layer base" alt="Fortress" />
 
             {/* Economy Layer (SVG) */}
             <div className={`layer farmers-container ${hasFarmers ? 'visible' : ''}`}>

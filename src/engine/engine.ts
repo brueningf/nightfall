@@ -143,6 +143,13 @@ export function processTurn(currentState: GameState, newAllocation?: { farmers: 
             tech.unlocked = true;
             state.activeResearchId = null; // Clear active
             state.eventLog = [`RESEARCH COMPLETE: ${tech.name}!`, ...state.eventLog];
+            state.notifications.push({
+                id: `res-${state.turn}-${Date.now()}`,
+                type: 'RESEARCH_COMPLETE',
+                title: 'RESEARCH COMPLETE',
+                message: `${tech.name} has been unlocked.`,
+                turn: state.turn
+            });
         }
     } else {
         // Lost knowledge? Or maybe stockpiled as "General Theory"? 
@@ -190,6 +197,13 @@ export function processTurn(currentState: GameState, newAllocation?: { farmers: 
     if (netDamage > 0) {
         state.wallHealth -= netDamage;
         log.push(`Demons attacked! Walls took ${netDamage} damage.`);
+        state.notifications.push({
+            id: `att-${state.turn}-${Date.now()}`,
+            type: 'ATTACK',
+            title: 'UNDER ATTACK',
+            message: `The walls took ${netDamage} damage from the void swarm.`,
+            turn: state.turn
+        });
     } else {
         log.push(`Defenders held the line!`);
         state.hero.xp += 10;

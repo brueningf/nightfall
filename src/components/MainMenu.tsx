@@ -35,12 +35,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpe
                         audioController.playClick();
                         onContinue();
                     }}>
-                        <span><Icon icon="game-icons:play-button" /></span> RESUME CYCLE
+                        <span><Icon icon="game-icons:play-button" /></span> CONTINUE
                     </button>
                 )}
 
                 <div className="difficulty-selector" style={{ margin: '15px 0', background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '8px' }}>
-                    <div style={{ color: '#888', fontSize: '0.8rem', marginBottom: '8px' }}>SELECT PROTOCOL LEVEL</div>
+                    <div style={{ color: '#888', fontSize: '0.8rem', marginBottom: '8px' }}>DIFFICULTY LEVEL</div>
                     <div style={{ display: 'flex', gap: '5px' }}>
                         {['RECRUIT', 'VETERAN', 'COMMANDER', 'LEGEND'].map(diff => (
                             <button
@@ -67,7 +67,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpe
                     audioController.playClick();
                     onNewGame(selectedDiff);
                 }}>
-                    <span><Icon icon="game-icons:rocket" /></span> INITIALIZE NEW COLONY
+                    <span><Icon icon="game-icons:rocket" /></span> NEW GAME
                 </button>
 
                 <button className="menu-btn info" onClick={() => { audioController.playClick(); onOpenInfo(); }}>
@@ -79,7 +79,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpe
                 </button>
 
                 <button className="menu-btn settings" onClick={() => { audioController.playClick(); onOpenSettings(); }}>
-                    <span><Icon icon="game-icons:gears" /></span> SYSTEM CONFIG
+                    <span><Icon icon="game-icons:gears" /></span> SETTINGS
                 </button>
             </div>
 

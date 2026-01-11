@@ -75,6 +75,15 @@ export type GameState = {
         active: boolean;
         turnsRemaining: number;
     };
+    notifications: GameNotification[];
+};
+
+export type GameNotification = {
+    id: string;
+    type: 'RESEARCH_COMPLETE' | 'ATTACK' | 'VICTORY' | 'DEFEAT' | 'GENERIC';
+    title: string;
+    message: string;
+    turn: number;
 };
 
 export type Difficulty = 'RECRUIT' | 'VETERAN' | 'COMMANDER' | 'LEGEND';
@@ -197,5 +206,6 @@ export const INITIAL_STATE: GameState = {
     finalStand: {
         active: false,
         turnsRemaining: 0
-    }
+    },
+    notifications: []
 };

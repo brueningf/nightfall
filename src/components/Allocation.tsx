@@ -58,7 +58,8 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
             if (state.techs['HEAVY_PLOW'].unlocked) yieldPer *= 1.25;
             // Season ignored for simple preview, or could include? Let's genericize.
             // Growth calc preview
-            const totalPop = state.population.total || 1;
+            // Growth calc preview
+            // const totalPop = state.population.total || 1;
             const production = count * yieldPer;
             // Let's just say "Supports +X Pop/Day"
             return `~${Math.floor(production)} Food/day (${Math.floor(production / 1)} fed)`;
@@ -97,10 +98,10 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
 
     return (
         <div className="allocation-panel">
-            <div className="allocation-header">
-                <h3>CREW ASSIGNMENTS</h3>
+            <div className="allocation-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px', paddingBottom: '8px' }}>
+                <h3 style={{ fontSize: '0.65rem', margin: 0, color: '#888', letterSpacing: '1px' }}>CREW ASSIGNMENTS</h3>
                 {/* Visual Bar of Distribution */}
-                <div style={{ height: '6px', width: '100%', background: '#222', display: 'flex', marginTop: '5px', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ height: '6px', width: '100%', background: '#222', display: 'flex', borderRadius: '3px', overflow: 'hidden' }}>
                     <div style={{ width: `${allocation.farmers}%`, background: 'var(--color-success)' }} title="Farmers"></div>
                     <div style={{ width: `${allocation.miners}%`, background: 'var(--color-secondary)' }} title="Miners"></div>
                     <div style={{ width: `${allocation.soldiers}%`, background: 'var(--color-danger)' }} title="Soldiers"></div>
@@ -110,13 +111,13 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
 
             <div className="allocation-grid">
                 <ControlRow
-                    label={<><Icon icon="game-icons:techno-heart" color="#e69024" /> HYDROPONICS</>} role="farmers"
+                    label={<><Icon icon="game-icons:wheat" color="#2ecc71" /> HYDROPONICS</>} role="farmers"
                     percentage={allocation.farmers}
                     onAdjust={handleChange} isProcessing={isProcessing} canIncrease={totalAllocated < 100}
                     details={getEstimate('farmers', allocation.farmers)}
                 />
                 <ControlRow
-                    label={<><Icon icon="game-icons:drill" color="#aaa" /> EXTRACTORS</>} role="miners"
+                    label={<><Icon icon="game-icons:drill" color="#3498db" /> EXTRACTORS</>} role="miners"
                     percentage={allocation.miners}
                     onAdjust={handleChange} isProcessing={isProcessing} canIncrease={totalAllocated < 100}
                     details={getEstimate('miners', allocation.miners)}

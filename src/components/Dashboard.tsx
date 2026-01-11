@@ -93,12 +93,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                                     style={{
                                         margin: 0,
                                         width: 'auto',
-                                        padding: '4px 12px',
-                                        fontSize: '0.9rem',
-                                        flex: '0 0 auto'
+                                        padding: '12px 24px',
+                                        fontSize: '1rem',
+                                        flex: '0 0 auto',
+                                        fontWeight: 'bold',
+                                        letterSpacing: '1px'
                                     }}
                                 >
-                                    {state.gameOver ? "SIGNAL LOST" : "CYCLE END"}
+                                    {state.gameOver ? "SIGNAL LOST" : "NEXT TURN"}
                                 </button>
 
                                 {/* Right: Info & Purge */}

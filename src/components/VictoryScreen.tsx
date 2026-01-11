@@ -9,7 +9,7 @@ interface VictoryScreenProps {
 export const VictoryScreen: React.FC<VictoryScreenProps> = ({ daysSurvived, onRestart }) => {
     return (
         <div className="game-over-screen" style={{
-            backgroundImage: `url(/scene_victory.png)`,
+            backgroundImage: `url(/scene_victory.jpg)`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             display: 'flex',

@@ -16,25 +16,25 @@ export const DefenseControls: React.FC<DefenseControlsProps> = ({ currentStance,
                     className={`stance-btn ${currentStance === 'STANDARD' ? 'active' : ''}`}
                     onClick={() => onSetStance('STANDARD')}
                     title="Standard Defense"
-                    style={{ fontSize: '0.7rem' }}
+                    style={{ fontSize: '0.65rem', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                    <Icon icon="game-icons:shield-command" style={{ marginRight: '5px', verticalAlign: 'middle' }} /> STD
+                    <Icon icon="game-icons:shield" style={{ fontSize: '1rem' }} /> DEFEND
                 </button>
                 <button
                     className={`stance-btn ${currentStance === 'MAN_THE_WALLS' ? 'active' : ''}`}
                     onClick={() => onSetStance('MAN_THE_WALLS')}
                     title="Man the Walls (+Def, -Repair)"
-                    style={{ fontSize: '0.7rem' }}
+                    style={{ fontSize: '0.65rem', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                    <Icon icon="game-icons:stone-wall" style={{ marginRight: '5px', verticalAlign: 'middle' }} /> REINFORCE
+                    <Icon icon="game-icons:tower-flag" style={{ fontSize: '1rem' }} /> FORTIFY
                 </button>
                 <button
                     className={`stance-btn danger ${currentStance === 'SALLY_FORTH' ? 'active' : ''}`}
                     onClick={() => onSetStance('SALLY_FORTH')}
                     title="Sally Forth (2x Dmg, Risk Deaths)"
-                    style={{ fontSize: '0.7rem' }}
+                    style={{ fontSize: '0.65rem', padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                    <Icon icon="game-icons:submachine-gun" style={{ marginRight: '5px', verticalAlign: 'middle' }} /> CHARGE
+                    <Icon icon="game-icons:crossed-swords" style={{ fontSize: '1rem' }} /> ATTACK
                 </button>
             </div>
 
