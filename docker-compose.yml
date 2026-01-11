@@ -1,7 +1,7 @@
 services:
   nightfall:
     image: node:18-alpine
-    name: nightfall
+    container_name: nightfall
     restart: unless-stopped
     working_dir: /app
     volumes:
