@@ -1,73 +1,17 @@
-# React + TypeScript + Vite
+# NightFall: The Last Bastion
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The sun shattered three centuries ago. We don't know why, and we don't know how. We only know what followed: The Eternal Night, and with it, the Void.
 
-Currently, two official plugins are available:
+When the light died, the demons came. They emerged from the cracks in reality—twisted, shadow-wreathed horrors that hunger for life, for warmth, for the very memory of the sun. Humanity was consumed. Cities fell in hours. Nations in days.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Now, only one fortress remains.
 
-## React Compiler
+We call it The Bastion. It is built upon the Incendium Core, the last fragment of the sun that fell to earth. Its warmth keeps the ice at bay. Its light keeps the demons back. But the Core is fading. The cold is creeping in. And the Void Swarm grows bolder with every passing cycle.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+You are the Commander. The last hope of a dying species.
 
-## Expanding the ESLint configuration
+Your duty is simple, yet impossible: Manage the survivors. Gather what meager resources the frozen earth still yields. Research ancient technologies to strengthen our walls. And when the horns sound—stand.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+You must hold the line. You must protect the Core. Because if this light goes out... there will be no dawn.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Welcome to the end of the world. Good luck, Commander.

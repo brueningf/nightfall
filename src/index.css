@@ -37,13 +37,20 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
+    /* Changed from 100vw to allow centering */
+    max-width: 480px;
+    /* Simulate mobile width */
+    margin: 0 auto;
+    /* Center on desktop */
     padding: 0;
-    margin: 0;
-    max-width: none;
     background-color: var(--color-bg);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    /* Nice drop shadow on desktop */
+    border-left: 1px solid #222;
+    border-right: 1px solid #222;
 }
 
 .research-trigger-btn {
