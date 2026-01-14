@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { hasSaveGame } from '../engine/persistence';
 import type { Difficulty } from '../engine/types';
 import { Icon } from '@iconify/react';
@@ -15,6 +15,27 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpenInfo, onOpenSettings, onOpenScores }) => {
     const canContinue = hasSaveGame();
     const [selectedDiff, setSelectedDiff] = useState<Difficulty>('VETERAN');
+    const [installPrompt, setInstallPrompt] = useState<any>(null);
+
+    useEffect(() => {
+        const handler = (e: any) => {
+            e.preventDefault();
+            setInstallPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handler);
+        return () => window.removeEventListener('beforeinstallprompt', handler);
+    }, []);
+
+    const handleInstall = () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        installPrompt.userChoice.then((choiceResult: any) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            }
+            setInstallPrompt(null);
+        });
+    };
 
     return (
         <div className="main-menu" style={{
@@ -24,9 +45,28 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpe
             textShadow: '0 2px 4px black'
         }}>
             <div className="overlay" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', zIndex: 0 }}></div>
-            <div className="title-area" style={{ position: 'relative', zIndex: 1 }}>
+            <div className="title-area" style={{ position: 'relative', zIndex: 1, marginBottom: '20px' }}>
                 <h1 className="game-title">NIGHTFALL</h1>
                 <p className="subtitle">The Darkness Comes For All</p>
+                {installPrompt && (
+                    <button onClick={handleInstall} style={{
+                        marginTop: '10px',
+                        background: 'transparent',
+                        border: '1px solid var(--color-primary)',
+                        color: 'var(--color-primary)',
+                        padding: '8px 16px',
+                        borderRadius: '20px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        margin: '10px auto'
+                    }}>
+                        <Icon icon="game-icons:download" /> INSTALL APP
+                    </button>
+                )}
             </div>
 
             <div className="menu-options" style={{ position: 'relative', zIndex: 2 }}>

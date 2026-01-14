@@ -1,21 +1,18 @@
+* {
+    box-sizing: border-box;
+}
+
 :root {
     --color-bg: #050505;
     /* Deep Void */
     --color-panel: #0f0f15;
     /* Dark Hull */
     --color-text: #e0e0e0;
-
-    /* Semantic Colors */
-    --color-danger: #ff3333;
-    /* Red/Alert */
+    /* ... rest of vars ... */
     --color-primary: #00ccff;
-    /* Cyan/Science/Humanity */
     --color-secondary: #cc33ff;
-    /* Purple/Void/Shards */
     --color-success: #33ff99;
-    /* Green/Life support */
     --color-warning: #ffcc00;
-    /* Yellow/Warning */
 
     --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-mono: 'Courier New', Courier, monospace;
@@ -26,31 +23,36 @@ body {
     background-color: var(--color-bg);
     color: var(--color-text);
     line-height: 1.5;
-    height: 100vh;
+    height: 100dvh;
+    /* Use dynamic viewport height */
     width: 100vw;
+    /* Full width */
     overflow: hidden;
+    /* Prevent body scroll */
     -webkit-font-smoothing: antialiased;
+    margin: 0;
 }
 
 /* Main App Container */
 .app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     width: 100%;
-    /* Changed from 100vw to allow centering */
-    max-width: 480px;
-    /* Simulate mobile width */
-    margin: 0 auto;
-    /* Center on desktop */
-    padding: 0;
     background-color: var(--color-bg);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-    /* Nice drop shadow on desktop */
-    border-left: 1px solid #222;
-    border-right: 1px solid #222;
+}
+
+/* Desktop / Tablet constraints */
+@media (min-width: 481px) {
+    .app-container {
+        max-width: 480px;
+        margin: 0 auto;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        border-left: 1px solid #222;
+        border-right: 1px solid #222;
+    }
 }
 
 .research-trigger-btn {
