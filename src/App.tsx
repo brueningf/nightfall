@@ -144,7 +144,7 @@ function App() {
     }, [screen]);
 
     return (
-        <div className={`app-container ${isShaking ? 'shake' : ''}`}>
+        <div className={`flex flex-col h-full w-full bg-bg relative overflow-hidden md:max-w-[480px] md:mx-auto md:shadow-[0_0_40px_rgba(0,0,0,0.8)] md:border-x md:border-[#222] ${isShaking ? 'shake' : ''}`}>
             {screen === 'MENU' && (
                 <MainMenu
                     onNewGame={handleNewGame}

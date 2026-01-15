@@ -11,15 +11,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
     const [sfx, setSfx] = useState(audioController.sfxEnabled);
 
     return (
-        <div className="info-screen"> {/* Reusing info screen styles */}
-            <header className="info-header">
-                <h2>SETTINGS</h2>
-                <button className="close-btn" onClick={onBack}>✖</button>
+        <div className="h-full w-full bg-[#111] flex flex-col">
+            <header className="bg-[#222] p-4 flex justify-between items-center border-b border-[#333] shrink-0">
+                <h2 className="text-white m-0 text-xl tracking-widest font-bold">SETTINGS</h2>
+                <button className="bg-none border-none text-[#666] text-2xl cursor-pointer hover:text-white transition-colors p-1" onClick={onBack}>✖</button>
             </header>
 
-            <div className="info-content">
-                <div className="settings-row" style={{ marginBottom: '20px' }}>
-                    <label>Master Volume: {volume}%</label>
+            <div className="p-5 text-[#ccc] text-sm flex-1">
+                <div className="mb-6">
+                    <label className="block mb-2 font-bold text-white">Master Volume: {volume}%</label>
                     <input
                         type="range"
                         min="0"
@@ -30,11 +30,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                             setVolume(val);
                             audioController.setVolume(val);
                         }}
-                        style={{ width: '100%', marginTop: '10px' }}
+                        className="w-full accent-primary cursor-pointer"
                     />
                 </div>
 
-                <div className="settings-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+                <div className="flex items-center gap-3 mb-4">
                     <input
                         type="checkbox"
                         checked={music}
@@ -43,11 +43,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                             audioController.setMusicEnabled(e.target.checked);
                         }}
                         id="check-music"
+                        className="accent-primary w-5 h-5 cursor-pointer"
                     />
-                    <label htmlFor="check-music">Music</label>
+                    <label htmlFor="check-music" className="cursor-pointer select-none">Music</label>
                 </div>
 
-                <div className="settings-row" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="flex items-center gap-3 mb-4">
                     <input
                         type="checkbox"
                         checked={sfx}
@@ -56,11 +57,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                             audioController.setSfxEnabled(e.target.checked);
                         }}
                         id="check-sfx"
+                        className="accent-primary w-5 h-5 cursor-pointer"
                     />
-                    <label htmlFor="check-sfx">Sound Effects</label>
+                    <label htmlFor="check-sfx" className="cursor-pointer select-none">Sound Effects</label>
                 </div>
 
-                <p style={{ marginTop: '40px', color: '#666', fontSize: '0.8rem' }}>
+                <p className="mt-10 text-[#666] text-xs italic">
                     Note: Audio engine is currently experimental.
                 </p>
             </div>

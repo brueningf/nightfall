@@ -13,27 +13,27 @@ export const ScoresScreen: React.FC<ScoresScreenProps> = ({ onBack }) => {
     ];
 
     return (
-        <div className="info-screen">
-            <header className="info-header">
-                <h2>HALL OF HEROES</h2>
-                <button className="close-btn" onClick={onBack}>✖</button>
+        <div className="h-full w-full bg-[#111] flex flex-col">
+            <header className="bg-[#222] p-4 flex justify-between items-center border-b border-[#333] shrink-0">
+                <h2 className="text-white m-0 text-xl tracking-widest font-bold">HALL OF HEROES</h2>
+                <button className="bg-none border-none text-[#666] text-2xl cursor-pointer hover:text-white transition-colors p-1" onClick={onBack}>✖</button>
             </header>
 
-            <div className="info-content">
-                <table style={{ width: '100%', borderCollapse: 'collapse', color: '#ccc' }}>
+            <div className="p-5 overflow-y-auto flex-1">
+                <table className="w-full border-collapse text-[#ccc]">
                     <thead>
-                        <tr style={{ borderBottom: '1px solid #444', textAlign: 'left' }}>
-                            <th style={{ padding: '10px' }}>Name</th>
-                            <th style={{ padding: '10px' }}>Days</th>
-                            <th style={{ padding: '10px' }}>Fate</th>
+                        <tr className="border-b border-[#444] text-left">
+                            <th className="p-2.5">Name</th>
+                            <th className="p-2.5">Days</th>
+                            <th className="p-2.5">Fate</th>
                         </tr>
                     </thead>
                     <tbody>
                         {scores.map((score, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid #222' }}>
-                                <td style={{ padding: '10px' }}>{score.name}</td>
-                                <td style={{ padding: '10px', color: '#4cd964' }}>{score.days}</td>
-                                <td style={{ padding: '10px', fontStyle: 'italic', color: '#888' }}>{score.cause}</td>
+                            <tr key={i} className="border-b border-[#222]">
+                                <td className="p-2.5">{score.name}</td>
+                                <td className="p-2.5 text-[#4cd964]">{score.days}</td>
+                                <td className="p-2.5 italic text-[#888]">{score.cause}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -32,70 +32,41 @@ export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, o
     };
 
     return (
-        <div className="info-screen research-screen" style={{
-            height: embedded ? '100%' : '100vh',
-            background: embedded ? 'transparent' : '#0a0a10',
-            display: 'flex',
-            flexDirection: 'column',
-            color: '#eee',
-            backgroundImage: embedded ? 'none' : `linear-gradient(rgba(10, 10, 16, 0.95), rgba(10, 10, 16, 0.95)), url(/gscene_research.jpg)`,
-            backgroundSize: 'cover'
-        }}>
-            {/* Header */}
-            <header className="info-header" style={{
-                background: embedded ? 'rgba(0,0,0,0)' : 'rgba(20, 20, 30, 0.9)',
-                borderBottom: '1px solid #333',
-                padding: embedded ? '5px 10px' : '10px 15px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexShrink: 0
+        <div className={`flex flex-col text-[#eee] bg-cover bg-center overflow-hidden ${embedded ? 'h-full bg-transparent' : 'h-screen bg-[#0a0a10]'}`}
+            style={{
+                backgroundImage: embedded ? 'none' : `linear-gradient(rgba(10, 10, 16, 0.95), rgba(10, 10, 16, 0.95)), url(/gscene_research.jpg)`
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Icon icon="game-icons:archive-research" style={{ fontSize: embedded ? '1.2rem' : '1.5rem', color: 'var(--color-primary)' }} />
-                    <h2 style={{ fontSize: '1rem', margin: 0, color: 'var(--color-primary)', letterSpacing: '2px' }}>TECHNOLOGY</h2>
+            {/* Header */}
+            <header className={`flex justify-between items-center shrink-0 border-b border-[#333] ${embedded ? 'bg-transparent p-1.5 px-2.5' : 'bg-[#14141e]/90 p-2.5 px-4'}`}>
+                <div className="flex items-center gap-2.5">
+                    <Icon icon="game-icons:archive-research" className={`text-primary ${embedded ? 'text-xl' : 'text-2xl'}`} />
+                    <h2 className="text-[1rem] m-0 text-primary tracking-[2px] font-bold">TECHNOLOGY</h2>
                 </div>
                 {!embedded && (
-                    <button className="close-btn" onClick={onBack} style={{ fontSize: '1.2rem', padding: '5px' }}>
+                    <button className="text-xl p-1.5 text-[#666] bg-transparent border-none cursor-pointer hover:text-white transition-colors" onClick={onBack}>
                         <Icon icon="game-icons:exit-door" />
                     </button>
                 )}
             </header>
 
             {/* Stats Bar */}
-            <div style={{
-                background: 'rgba(0,0,0,0.6)',
-                padding: '8px 15px',
-                fontSize: '0.8rem',
-                borderBottom: '1px solid #333',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexShrink: 0
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#888' }}>
+            <div className="flex justify-between items-center shrink-0 bg-black/60 p-2 px-4 text-[0.8rem] border-b border-[#333]">
+                <div className="flex items-center gap-1.5 text-[#888]">
                     <Icon icon="game-icons:test-tubes" />
                     <span>OUTPUT:</span>
-                    <strong style={{ color: 'var(--color-primary)' }}>{dailyOutput.toFixed(1)} / day</strong>
+                    <strong className="text-primary">{dailyOutput.toFixed(1)} / day</strong>
                 </div>
 
                 {state.activeResearchId && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--color-primary)' }}>
-                        <Icon icon="game-icons:cog" className="spin-slow" />
+                    <div className="flex items-center gap-1.5 text-primary">
+                        <Icon icon="game-icons:cog" className="animate-spin-slow" />
                         <span>ACTIVE: {state.techs[state.activeResearchId].name}</span>
                     </div>
                 )}
             </div>
 
             {/* Scrollable List */}
-            <div className="research-list" style={{
-                flex: 1,
-                overflowY: 'auto',
-                padding: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px'
-            }}>
+            <div className="flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
                 {Object.values(state.techs).map((tech) => {
                     const isActive = state.activeResearchId === tech.id;
                     const progress = state.researchProgress[tech.id] || 0;
@@ -105,55 +76,40 @@ export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, o
 
                     const isIgnition = tech.id === 'CORE_STABILIZATION';
 
+                    let cardBg = 'bg-[#121218]';
+                    let cardBorder = 'border-[#333]';
+                    let opacity = 'opacity-100';
+
+                    if (tech.unlocked) {
+                        cardBg = 'bg-[rgba(0,204,255,0.08)]';
+                        opacity = 'opacity-70';
+                    } else if (isActive) {
+                        cardBg = 'bg-[rgba(0,204,255,0.05)]';
+                        cardBorder = 'border-primary';
+                    }
+
                     return (
-                        <div key={tech.id} style={{
-                            background: tech.unlocked ? 'rgba(0, 204, 255, 0.08)' : isActive ? 'rgba(0, 204, 255, 0.05)' : '#121218',
-                            border: isActive ? '1px solid var(--color-primary)' : '1px solid #333',
-                            borderRadius: '4px',
-                            padding: '10px',
-                            display: 'flex',
-                            gap: '12px',
-                            alignItems: 'center',
-                            opacity: tech.unlocked ? 0.7 : 1, // Dim unlocked items slightly
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
+                        <div key={tech.id} className={`${cardBg} border ${cardBorder} rounded p-2.5 flex gap-3 items-center relative overflow-hidden transition-all ${opacity}`}>
                             {/* Icon Column */}
-                            <div style={{
-                                fontSize: '2rem',
-                                color: tech.unlocked ? 'var(--color-success)' : isActive ? 'var(--color-primary)' : '#555',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: '50px',
-                                flexShrink: 0
-                            }}>
+                            <div className={`text-2xl flex items-center justify-center w-[50px] shrink-0 ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#555]'}`}>
                                 <Icon icon={getIconForTech(tech.id)} />
                             </div>
 
                             {/* Info Column */}
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                    <h3 style={{
-                                        margin: 0,
-                                        fontSize: '0.9rem',
-                                        color: tech.unlocked ? 'var(--color-success)' : isActive ? 'var(--color-primary)' : '#ddd',
-                                        textTransform: 'uppercase',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }}>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center mb-0.5">
+                                    <h3 className={`m-0 text-[0.9rem] uppercase whitespace-nowrap overflow-hidden text-ellipsis ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#ddd]'}`}>
                                         {tech.name}
                                     </h3>
-                                    {tech.unlocked && <Icon icon="game-icons:check-mark" style={{ color: 'var(--color-success)' }} />}
+                                    {tech.unlocked && <Icon icon="game-icons:check-mark" className="text-success" />}
                                 </div>
-                                <p style={{ margin: 0, fontSize: '0.75rem', color: '#888', lineHeight: '1.2' }}>{tech.description}</p>
+                                <p className="m-0 text-[0.75rem] text-[#888] leading-tight">{tech.description}</p>
 
                                 {/* Progress Bar for Active/In-Progress */}
                                 {!tech.unlocked && (
-                                    <div style={{ marginTop: '6px', fontSize: '0.7rem', color: '#666', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <div style={{ flex: 1, height: '4px', background: '#222', borderRadius: '2px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${percent}%`, height: '100%', background: isActive ? 'var(--color-primary)' : '#444' }}></div>
+                                    <div className="mt-1.5 text-[0.7rem] text-[#666] flex items-center gap-2">
+                                        <div className="flex-1 h-1 bg-[#222] rounded overflow-hidden">
+                                            <div style={{ width: `${percent}%` }} className={`h-full ${isActive ? 'bg-primary' : 'bg-[#444]'}`}></div>
                                         </div>
                                         <span>{Math.floor(percent)}%</span>
                                     </div>
@@ -161,57 +117,26 @@ export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, o
                             </div>
 
                             {/* Action Column */}
-                            <div style={{ flexShrink: 0, width: '90px', display: 'flex', justifyContent: 'flex-end' }}>
+                            <div className="shrink-0 w-[90px] flex justify-end">
                                 {isIgnition && tech.unlocked ? (
                                     <button
                                         onClick={onIgnite}
-                                        style={{
-                                            background: '#ffd700',
-                                            color: '#000',
-                                            border: 'none',
-                                            fontWeight: 'bold',
-                                            padding: '8px 10px',
-                                            cursor: 'pointer',
-                                            fontSize: '0.75rem',
-                                            borderRadius: '2px',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            lineHeight: '1'
-                                        }}
+                                        className="bg-[#ffd700] text-black border-none font-bold px-2.5 py-2 cursor-pointer text-[0.75rem] rounded flex flex-col items-center leading-none hover:brightness-110"
                                     >
                                         <span>IGNITE</span>
-                                        <span style={{ fontSize: '0.65rem' }}>2000 💠</span>
+                                        <span className="text-[0.65rem]">2000 💠</span>
                                     </button>
                                 ) : tech.unlocked ? (
-                                    <div style={{
-                                        fontSize: '0.7rem',
-                                        color: 'var(--color-success)',
-                                        border: '1px solid var(--color-success)',
-                                        padding: '2px 6px',
-                                        borderRadius: '2px'
-                                    }}>ACQUIRED</div>
+                                    <div className="text-[0.7rem] text-success border border-success px-1.5 py-0.5 rounded font-bold uppercase">ACQUIRED</div>
                                 ) : isActive ? (
-                                    <div style={{
-                                        textAlign: 'center',
-                                        color: 'var(--color-primary)',
-                                        fontSize: '0.75rem'
-                                    }}>
-                                        <div style={{ fontWeight: 'bold' }}>{daysLeft} Days</div>
-                                        <div style={{ fontSize: '0.6rem' }}>Researching...</div>
+                                    <div className="text-center text-primary text-[0.75rem]">
+                                        <div className="font-bold">{daysLeft} Days</div>
+                                        <div className="text-[0.6rem]">Researching...</div>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={() => onResearch(tech.id)}
-                                        style={{
-                                            background: 'transparent',
-                                            color: 'var(--color-primary)',
-                                            border: '1px solid var(--color-primary)',
-                                            padding: '6px 10px',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer',
-                                            textTransform: 'uppercase'
-                                        }}
+                                        className="bg-transparent text-primary border border-primary px-2.5 py-1.5 text-[0.75rem] cursor-pointer uppercase transition-colors hover:bg-primary hover:text-black"
                                     >
                                         Start ({tech.cost})
                                     </button>

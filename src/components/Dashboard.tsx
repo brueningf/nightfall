@@ -19,117 +19,104 @@ interface DashboardProps {
     onMenu: () => void;
 }
 
-
+const NavButton: React.FC<{ active: boolean; onClick: () => void; icon: string; label: string }> = ({ active, onClick, icon, label }) => (
+    <button
+        className={`flex-1 bg-transparent border-none py-2 px-1 cursor-pointer font-bold uppercase text-[0.7rem] tracking-wider transition-all whitespace-nowrap flex justify-center items-center ${active ? 'bg-white/5 text-primary border-b-2 border-primary [text-shadow:0_0_8px_var(--color-primary)]' : 'text-[#666] hover:text-[#888]'}`}
+        onClick={onClick}
+    >
+        <Icon icon={icon} className="mr-2 align-middle text-lg" />
+        {label}
+    </button>
+);
 export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextTurn, onSetStance, onResearch, onIgnite, onBanish, onMenu }) => {
     const [activeTab, setActiveTab] = useState<'GAME' | 'MAP' | 'LOG' | 'TECH'>('GAME');
 
     return (
-        <div className="dashboard">
-            <header className="stats-bar" style={{ padding: '4px 10px', height: '32px', alignItems: 'center' }}>
-                <div className="stat-group" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <div className="stat" style={{ fontWeight: 'bold' }}>SOL {state.turn}</div>
-                    <div className="stat-divider" style={{ width: '1px', height: '14px', background: '#333' }}></div>
-                    <div className="stat" style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div className="flex flex-col gap-2.5 flex-1 p-2.5 bg-[radial-gradient(circle_at_center,_#1a1a20_0%,_#000_100%)]">
+            <header className="flex justify-between bg-panel/90 text-[0.85rem] border-y border-[#333] shrink-0 items-center h-8 px-2.5">
+                <div className="flex items-center gap-4">
+                    <div className="font-bold">SOL {state.turn}</div>
+                    <div className="w-px h-3.5 bg-[#333]"></div>
+                    <div className="text-success flex items-center gap-2">
                         <Icon icon="game-icons:electric" /> {Math.floor(state.resources.food)}
                     </div>
-                    <div className="stat" style={{ color: 'var(--color-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div className="text-secondary flex items-center gap-2">
                         <Icon icon="game-icons:crystal-shrine" /> {Math.floor(state.resources.shards)}
                     </div>
-                    <div className="stat" style={{ color: '#aaa', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div className="text-[#aaa] flex items-center gap-2">
                         <Icon icon="game-icons:person" /> {Math.floor(state.population.total)}
                     </div>
                 </div>
-                <div className="stat-group right" style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={onMenu} className="research-trigger-btn" style={{ padding: '2px 8px', fontSize: '0.65rem', background: '#333' }}>
-                        <Icon icon="game-icons:exit-door" style={{ verticalAlign: 'middle' }} />
+                <div className="flex gap-2">
+                    <button onClick={onMenu} className="bg-[#333] px-2 py-0.5 text-[0.65rem] text-primary border border-primary font-bold uppercase cursor-pointer hover:bg-primary hover:text-black transition-colors shadow-[0_0_5px_rgba(0,204,255,0.3)]">
+                        <Icon icon="game-icons:exit-door" className="align-middle" />
                     </button>
                 </div>
             </header>
 
-            <nav className="tab-nav">
-                <button
-                    className={`tab-btn ${activeTab === 'GAME' ? 'active' : ''}`}
+            <nav className="flex gap-0.5 mb-1.5 bg-black/50 p-0.5 border border-[#333]">
+                <NavButton
+                    active={activeTab === 'GAME'}
                     onClick={() => setActiveTab('GAME')}
-                >
-                    <Icon icon="game-icons:castle" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    FORT
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === 'MAP' ? 'active' : ''}`}
+                    icon="game-icons:castle"
+                    label="FORT"
+                />
+                <NavButton
+                    active={activeTab === 'MAP'}
                     onClick={() => setActiveTab('MAP')}
-                >
-                    <Icon icon="game-icons:radar-sweep" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    SCAN
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === 'LOG' ? 'active' : ''}`}
+                    icon="game-icons:radar-sweep"
+                    label="SCAN"
+                />
+                <NavButton
+                    active={activeTab === 'LOG'}
                     onClick={() => setActiveTab('LOG')}
-                >
-                    <Icon icon="game-icons:notebook" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    LOGS
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === 'TECH' ? 'active' : ''}`}
+                    icon="game-icons:notebook"
+                    label="LOGS"
+                />
+                <NavButton
+                    active={activeTab === 'TECH'}
                     onClick={() => setActiveTab('TECH')}
-                >
-                    <Icon icon="game-icons:bookshelf" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    TECH
-                </button>
+                    icon="game-icons:bookshelf"
+                    label="TECH"
+                />
             </nav>
 
-            <div className="tab-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div className="flex-1 flex flex-col overflow-hidden">
                 {activeTab === 'GAME' && (
-                    <div className="game-view-container" style={{ overflowY: 'auto', paddingBottom: '20px' }}>
+                    <div className="overflow-y-auto pb-5">
                         <VisualFortress state={state} />
 
-                        <div className="visuals-overlap-stats">
-                            <div className="wall-meter">
+                        <div className="relative z-10 p-2.5 bg-black/80 border-t border-[#333] backdrop-blur-sm">
+                            <div className="mb-2 text-xs text-white z-10 font-mono">
                                 HULL INTEGRITY: {Math.floor(state.wallHealth)} / {state.maxWallHealth}
-                                <div className="meter-bg">
+                                <div className="w-full h-1.5 bg-[#222] overflow-hidden mt-1 border border-[#444]">
                                     <div
-                                        className="meter-fill"
+                                        className="h-full bg-primary transition-[width] duration-300 shadow-[0_0_5px_var(--color-primary)]"
                                         style={{ width: `${(state.wallHealth / state.maxWallHealth) * 100}%` }}
                                     ></div>
                                 </div>
                             </div>
-                            <div className="demon-meter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '5px', paddingTop: '5px', borderTop: '1px solid #222' }}>
+                            <div className="text-xs text-danger flex items-center justify-between mt-1.5 pt-1.5 border-t border-[#222]">
                                 {/* Left: Action */}
                                 <button
-                                    className="next-turn-btn"
+                                    className="w-auto px-6 py-3 bg-primary text-black border-none text-[1rem] font-bold cursor-pointer uppercase transition-all tracking-[1px] m-0 shrink-0 shadow-[0_0_10px_rgba(0,204,255,0.3)] hover:bg-[#33d6ff] hover:shadow-[0_0_15px_rgba(0,204,255,0.5)] hover:-translate-y-px disabled:bg-[#333] disabled:text-[#666] disabled:cursor-not-allowed disabled:shadow-none"
                                     onClick={onNextTurn}
                                     disabled={state.gameOver}
-                                    style={{
-                                        margin: 0,
-                                        width: 'auto',
-                                        padding: '12px 24px',
-                                        fontSize: '1rem',
-                                        flex: '0 0 auto',
-                                        fontWeight: 'bold',
-                                        letterSpacing: '1px'
-                                    }}
                                 >
                                     {state.gameOver ? "SIGNAL LOST" : "NEXT TURN"}
                                 </button>
 
                                 {/* Right: Info & Purge */}
-                                <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                <div className="text-right flex flex-col items-end">
                                     <div>
-                                        <span className="threat-label">VOID THREAT:</span> {state.demonStrength.toFixed(1)}
+                                        <span className="font-bold text-danger uppercase">VOID THREAT:</span> {state.demonStrength.toFixed(1)}
                                     </div>
-                                    <div className="scout-report" style={{ marginBottom: '4px' }}>{state.scoutReport}</div>
+                                    <div className="italic text-[#888] text-[0.7rem] mb-1">{state.scoutReport}</div>
 
                                     <button
                                         onClick={onBanish}
                                         disabled={state.resources.shards < 100}
-                                        className="banish-btn"
-                                        style={{
-                                            background: 'rgba(204, 51, 255, 0.2)',
-                                            border: '1px solid var(--color-secondary)',
-                                            color: 'var(--color-secondary)',
-                                            padding: '2px 8px', fontSize: '0.7rem', cursor: 'pointer',
-                                            opacity: state.resources.shards < 100 ? 0.5 : 1,
-                                            fontWeight: 'bold', textTransform: 'uppercase'
-                                        }}
+                                        className="bg-[rgba(204,51,255,0.2)] border border-secondary text-secondary px-2 py-0.5 text-[0.7rem] cursor-pointer font-bold uppercase disabled:opacity-50 hover:bg-secondary hover:text-black transition-colors"
                                         title="Cost: 100 Shards"
                                     >
                                         INITIATE PURGE (-2)
@@ -146,7 +133,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                         />
 
                         {/* Allocation Controls (Percentage Based) */}
-                        <div className="controls-area" style={{ marginTop: '10px' }}>
+                        <div className="mt-2.5">
                             <Allocation
                                 state={state}
                                 allocation={state.allocation}
@@ -154,8 +141,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                                 onAllocate={onAllocate}
                                 isProcessing={state.gameOver}
                             />
-
-
                         </div>
                     </div>
                 )}

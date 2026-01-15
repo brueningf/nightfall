@@ -18,24 +18,24 @@ const ControlRow = ({ label, role, percentage, onAdjust, isProcessing, canIncrea
     canIncrease: boolean,
     details: string
 }) => (
-    <div className="allocation-row">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <span className="role-label" style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>{label}</span>
-            <span style={{ fontSize: '0.75rem', color: '#888' }}>{details}</span>
+    <div className="bg-panel p-2 border border-[#2a2a35] rounded-sm">
+        <div className="flex justify-between items-center mb-1">
+            <span className="text-[0.8rem] text-[#e0e0e0] font-bold flex items-center gap-1.5">{label}</span>
+            <span className="text-xs text-[#888]">{details}</span>
         </div>
-        <div className="control-group">
+        <div className="flex items-center gap-2 justify-end">
             <button
-                className="adjust-btn minus"
+                className="bg-transparent border border-[#5a2d2d] w-6 h-6 flex justify-center items-center cursor-pointer font-bold text-danger hover:border-danger hover:bg-[#222] disabled:opacity-20 disabled:cursor-not-allowed disabled:border-[#333]"
                 onClick={() => onAdjust(role, -5)}
                 disabled={isProcessing || percentage <= 0}
             >-</button>
 
-            <div className="role-readout">
-                <span className="role-pct">{percentage}%</span>
+            <div className="font-mono text-white min-w-[35px] text-center">
+                <span className="text-white">{percentage}%</span>
             </div>
 
             <button
-                className="adjust-btn plus"
+                className="bg-transparent border border-[#2d5a45] w-6 h-6 flex justify-center items-center cursor-pointer font-bold text-success hover:border-success hover:bg-[#222] disabled:opacity-20 disabled:cursor-not-allowed disabled:border-[#333]"
                 onClick={() => onAdjust(role, 5)}
                 disabled={isProcessing || !canIncrease}
             >+</button>
@@ -97,19 +97,19 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
     };
 
     return (
-        <div className="allocation-panel">
-            <div className="allocation-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px', paddingBottom: '8px' }}>
-                <h3 style={{ fontSize: '0.65rem', margin: 0, color: '#888', letterSpacing: '1px' }}>CREW ASSIGNMENTS</h3>
+        <div className="bg-[#101015] p-3 border border-[#333]">
+            <div className="flex flex-col items-start gap-1 pb-2 border-b border-[#333] mb-3">
+                <h3 className="text-[0.65rem] m-0 text-[#888] tracking-widest uppercase">CREW ASSIGNMENTS</h3>
                 {/* Visual Bar of Distribution */}
-                <div style={{ height: '6px', width: '100%', background: '#222', display: 'flex', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${allocation.farmers}%`, background: 'var(--color-success)' }} title="Farmers"></div>
-                    <div style={{ width: `${allocation.miners}%`, background: 'var(--color-secondary)' }} title="Miners"></div>
-                    <div style={{ width: `${allocation.soldiers}%`, background: 'var(--color-danger)' }} title="Soldiers"></div>
-                    <div style={{ width: `${scientistPercentage}%`, background: 'var(--color-primary)' }} title="Scientists"></div>
+                <div className="h-1.5 w-full bg-[#222] flex rounded-none overflow-hidden mt-1">
+                    <div style={{ width: `${allocation.farmers}%` }} className="bg-success" title="Farmers"></div>
+                    <div style={{ width: `${allocation.miners}%` }} className="bg-secondary" title="Miners"></div>
+                    <div style={{ width: `${allocation.soldiers}%` }} className="bg-danger" title="Soldiers"></div>
+                    <div style={{ width: `${scientistPercentage}%` }} className="bg-primary" title="Scientists"></div>
                 </div>
             </div>
 
-            <div className="allocation-grid">
+            <div className="grid grid-cols-1 gap-2">
                 <ControlRow
                     label={<><Icon icon="game-icons:wheat" color="#2ecc71" /> HYDROPONICS</>} role="farmers"
                     percentage={allocation.farmers}
@@ -130,14 +130,14 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
                 />
 
                 {/* Scientists are passive/free */}
-                <div className="allocation-row passive">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <span className="role-label" style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}><Icon icon="game-icons:microscope" /> RESEARCH</span>
-                        <span style={{ fontSize: '0.75rem', color: '#888' }}>{getEstimate('scientists', scientistPercentage)}</span>
+                <div className="bg-[rgba(0,204,255,0.05)] p-2 border border-primary rounded-sm">
+                    <div className="flex justify-between items-center mb-1">
+                        <span className="text-[0.8rem] text-[#e0e0e0] font-bold flex items-center gap-1.5"><Icon icon="game-icons:microscope" /> RESEARCH</span>
+                        <span className="text-xs text-[#888]">{getEstimate('scientists', scientistPercentage)}</span>
                     </div>
-                    <div className="control-group">
-                        <div className="role-readout">
-                            <span className="role-pct" style={{ color: 'var(--color-primary)' }}>{scientistPercentage}%</span>
+                    <div className="flex items-center gap-2 justify-end">
+                        <div className="font-mono text-primary text-center">
+                            <span className="text-primary">{scientistPercentage}%</span>
                         </div>
                     </div>
                 </div>
