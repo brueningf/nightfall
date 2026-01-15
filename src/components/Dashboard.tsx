@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import type { GameState, AllocationPolicy, DefenseStance } from '../engine/types';
+import type { GameState, AllocationPolicy, DefenseStance, TechId } from '../engine/types';
 import { Allocation } from './Allocation';
 import { EventLog } from './EventLog';
 import { MapScreen } from './MapScreen';
 import { VisualFortress } from './VisualFortress';
 import { DefenseControls } from './DefenseControls';
+import { ResearchScreen } from './ResearchScreen';
 import { Icon } from '@iconify/react';
 
 interface DashboardProps {
@@ -12,14 +13,15 @@ interface DashboardProps {
     onAllocate: (newPolicy: AllocationPolicy) => void;
     onNextTurn: () => void;
     onSetStance: (stance: DefenseStance) => void;
-    onOpenTech: () => void;
+    onResearch: (techId: TechId) => void;
+    onIgnite: () => void;
     onBanish: () => void;
     onMenu: () => void;
 }
 
 
-export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextTurn, onSetStance, onOpenTech, onBanish, onMenu }) => {
-    const [activeTab, setActiveTab] = useState<'GAME' | 'MAP' | 'LOG'>('GAME');
+export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextTurn, onSetStance, onResearch, onIgnite, onBanish, onMenu }) => {
+    const [activeTab, setActiveTab] = useState<'GAME' | 'MAP' | 'LOG' | 'TECH'>('GAME');
 
     return (
         <div className="dashboard">
@@ -38,7 +40,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                     </div>
                 </div>
                 <div className="stat-group right" style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={onOpenTech} className="research-trigger-btn" style={{ padding: '2px 8px', fontSize: '0.65rem' }}>ARCHIVES</button>
                     <button onClick={onMenu} className="research-trigger-btn" style={{ padding: '2px 8px', fontSize: '0.65rem', background: '#333' }}>
                         <Icon icon="game-icons:exit-door" style={{ verticalAlign: 'middle' }} />
                     </button>
@@ -51,14 +52,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                     onClick={() => setActiveTab('GAME')}
                 >
                     <Icon icon="game-icons:castle" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    FORTRESS
+                    FORT
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'MAP' ? 'active' : ''}`}
                     onClick={() => setActiveTab('MAP')}
                 >
                     <Icon icon="game-icons:radar-sweep" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    SCANNER
+                    SCAN
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'LOG' ? 'active' : ''}`}
@@ -66,6 +67,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                 >
                     <Icon icon="game-icons:notebook" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
                     LOGS
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === 'TECH' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('TECH')}
+                >
+                    <Icon icon="game-icons:bookshelf" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+                    TECH
                 </button>
             </nav>
 
@@ -158,6 +166,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
 
                 {activeTab === 'LOG' && (
                     <EventLog logs={state.eventLog} />
+                )}
+
+                {activeTab === 'TECH' && (
+                    <ResearchScreen
+                        state={state}
+                        onBack={() => setActiveTab('GAME')}
+                        onResearch={onResearch}
+                        onIgnite={onIgnite}
+                        embedded={true}
+                    />
                 )}
             </div>
         </div>

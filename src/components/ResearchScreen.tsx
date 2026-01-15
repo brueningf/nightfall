@@ -8,9 +8,10 @@ interface ResearchScreenProps {
     onBack: () => void;
     onResearch: (techId: TechId) => void;
     onIgnite: () => void;
+    embedded?: boolean;
 }
 
-export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, onResearch, onIgnite }) => {
+export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, onResearch, onIgnite, embedded }) => {
     // Calculate daily research output for estimates
     const scientistCount = state.population.scientists;
     const multiplier = state.techs['ARCANE_STUDIES'].unlocked ? 1.25 : 1.0;
@@ -32,31 +33,33 @@ export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, o
 
     return (
         <div className="info-screen research-screen" style={{
-            height: '100vh',
-            background: '#0a0a10',
+            height: embedded ? '100%' : '100vh',
+            background: embedded ? 'transparent' : '#0a0a10',
             display: 'flex',
             flexDirection: 'column',
             color: '#eee',
-            backgroundImage: `linear-gradient(rgba(10, 10, 16, 0.95), rgba(10, 10, 16, 0.95)), url(/gscene_research.jpg)`,
+            backgroundImage: embedded ? 'none' : `linear-gradient(rgba(10, 10, 16, 0.95), rgba(10, 10, 16, 0.95)), url(/gscene_research.jpg)`,
             backgroundSize: 'cover'
         }}>
             {/* Header */}
             <header className="info-header" style={{
-                background: 'rgba(20, 20, 30, 0.9)',
+                background: embedded ? 'rgba(0,0,0,0)' : 'rgba(20, 20, 30, 0.9)',
                 borderBottom: '1px solid #333',
-                padding: '10px 15px',
+                padding: embedded ? '5px 10px' : '10px 15px',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flexShrink: 0
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Icon icon="game-icons:archive-research" style={{ fontSize: '1.5rem', color: 'var(--color-primary)' }} />
-                    <h2 style={{ fontSize: '1rem', margin: 0, color: 'var(--color-primary)', letterSpacing: '2px' }}>RESEARCH ARCHIVES</h2>
+                    <Icon icon="game-icons:archive-research" style={{ fontSize: embedded ? '1.2rem' : '1.5rem', color: 'var(--color-primary)' }} />
+                    <h2 style={{ fontSize: '1rem', margin: 0, color: 'var(--color-primary)', letterSpacing: '2px' }}>TECHNOLOGY</h2>
                 </div>
-                <button className="close-btn" onClick={onBack} style={{ fontSize: '1.2rem', padding: '5px' }}>
-                    <Icon icon="game-icons:exit-door" />
-                </button>
+                {!embedded && (
+                    <button className="close-btn" onClick={onBack} style={{ fontSize: '1.2rem', padding: '5px' }}>
+                        <Icon icon="game-icons:exit-door" />
+                    </button>
+                )}
             </header>
 
             {/* Stats Bar */}

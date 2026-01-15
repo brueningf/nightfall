@@ -8,7 +8,6 @@ import { VictoryScreen } from './components/VictoryScreen';
 import { INITIAL_STATE } from './engine/types';
 import type { GameState, TechId } from './engine/types';
 import { processTurn, startResearch, banishDemons, igniteCore } from './engine/engine';
-import { ResearchScreen } from './components/ResearchScreen';
 import { audioController } from './engine/audio';
 import { saveGame, loadGame, clearSave } from './engine/persistence';
 
@@ -190,21 +189,15 @@ function App() {
                         onAllocate={handleAllocate}
                         onNextTurn={handleTurn}
                         onSetStance={handleStance}
-                        onOpenTech={() => setScreen('RESEARCH')}
+                        onResearch={handleResearch}
+                        onIgnite={handleIgnite}
                         onBanish={handleBanish}
                         onMenu={() => setScreen('MENU')}
                     />
                 </>
             )}
 
-            {screen === 'RESEARCH' && (
-                <ResearchScreen
-                    state={gameState}
-                    onBack={() => setScreen('GAME')}
-                    onResearch={handleResearch}
-                    onIgnite={handleIgnite}
-                />
-            )}
+
         </div>
     );
 }
