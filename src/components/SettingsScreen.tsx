@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { audioController } from '../engine/audio';
 
 interface SettingsScreenProps {
     onBack: () => void;
 }
 
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
-    const [volume, setVolume] = useState(50);
-    const [music, setMusic] = useState(true);
-    const [sfx, setSfx] = useState(true);
+    const [volume, setVolume] = useState(audioController.volume);
+    const [music, setMusic] = useState(audioController.musicEnabled);
+    const [sfx, setSfx] = useState(audioController.sfxEnabled);
 
     return (
         <div className="info-screen"> {/* Reusing info screen styles */}
@@ -24,7 +25,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                         min="0"
                         max="100"
                         value={volume}
-                        onChange={(e) => setVolume(parseInt(e.target.value))}
+                        onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            setVolume(val);
+                            audioController.setVolume(val);
+                        }}
                         style={{ width: '100%', marginTop: '10px' }}
                     />
                 </div>
@@ -33,7 +38,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                     <input
                         type="checkbox"
                         checked={music}
-                        onChange={(e) => setMusic(e.target.checked)}
+                        onChange={(e) => {
+                            setMusic(e.target.checked);
+                            audioController.setMusicEnabled(e.target.checked);
+                        }}
                         id="check-music"
                     />
                     <label htmlFor="check-music">Music</label>
@@ -43,7 +51,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
                     <input
                         type="checkbox"
                         checked={sfx}
-                        onChange={(e) => setSfx(e.target.checked)}
+                        onChange={(e) => {
+                            setSfx(e.target.checked);
+                            audioController.setSfxEnabled(e.target.checked);
+                        }}
                         id="check-sfx"
                     />
                     <label htmlFor="check-sfx">Sound Effects</label>

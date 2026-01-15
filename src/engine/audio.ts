@@ -15,6 +15,11 @@ class AudioController {
     private delayNode: DelayNode | null = null;
     private feedbackNode: GainNode | null = null;
 
+    // Settings
+    public musicEnabled: boolean = true;
+    public sfxEnabled: boolean = true;
+    public volume: number = 50;
+
     constructor() {
         try {
             const CtxClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -53,6 +58,60 @@ class AudioController {
         this.delayNode.connect(this.masterGain);
 
         this.delayNode.connect(this.masterGain);
+
+        // Load Settings
+        this.loadSettings();
+        this.applySettings();
+    }
+
+    private loadSettings() {
+        const savedMusic = localStorage.getItem('nightfall_music');
+        const savedSfx = localStorage.getItem('nightfall_sfx');
+        const savedVol = localStorage.getItem('nightfall_volume');
+
+        if (savedMusic !== null) this.musicEnabled = savedMusic === 'true';
+        if (savedSfx !== null) this.sfxEnabled = savedSfx === 'true';
+        if (savedVol !== null) this.volume = parseInt(savedVol);
+    }
+
+    public setMusicEnabled(enabled: boolean) {
+        this.musicEnabled = enabled;
+        localStorage.setItem('nightfall_music', String(enabled));
+        this.applySettings();
+
+        if (enabled) {
+            if (this.currentTrack) {
+                // Restart current track if we just enabled it
+                const track = this.currentTrack;
+                this.currentTrack = null;
+                this.startMusic(track);
+            }
+        } else {
+            this.stopMusic();
+        }
+    }
+
+    public setSfxEnabled(enabled: boolean) {
+        this.sfxEnabled = enabled;
+        localStorage.setItem('nightfall_sfx', String(enabled));
+        this.applySettings();
+    }
+
+    public setVolume(vol: number) {
+        this.volume = vol;
+        localStorage.setItem('nightfall_volume', String(vol));
+        this.applySettings();
+    }
+
+    private applySettings() {
+        if (!this.masterGain || !this.musicGain || !this.sfxGain) return;
+
+        // Master Volume (Logarithmic-ish check)
+        this.masterGain.gain.setValueAtTime(this.volume / 100, this.ctx?.currentTime || 0);
+
+        // Individual Mutes
+        this.musicGain.gain.setValueAtTime(this.musicEnabled ? 0.3 : 0, this.ctx?.currentTime || 0);
+        this.sfxGain.gain.setValueAtTime(this.sfxEnabled ? 0.4 : 0, this.ctx?.currentTime || 0);
     }
 
     // Public method to be called on user interaction
@@ -75,7 +134,7 @@ class AudioController {
 
     // Generic envelope generator for SFX
     private playOscillator(freq: number, type: OscillatorType, startTime: number, duration: number, vol: number, useDelay: boolean = false) {
-        if (!this.ctx || !this.sfxGain) return;
+        if (!this.ctx || !this.sfxGain || !this.sfxEnabled) return;
 
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -103,7 +162,7 @@ class AudioController {
     }
 
     private playNoise(duration: number, vol: number) {
-        if (!this.ctx || !this.sfxGain) return;
+        if (!this.ctx || !this.sfxGain || !this.sfxEnabled) return;
         const bufferSize = this.ctx.sampleRate * duration;
         const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -191,6 +250,10 @@ class AudioController {
     }
 
     startMusic(track: 'MENU' | 'GAME' | 'VICTORY' | 'DEFEAT') {
+        if (!this.musicEnabled) {
+            this.currentTrack = track; // Remember expectation
+            return;
+        }
         if (this.currentTrack === track && this.currentAudio && !this.currentAudio.paused) return;
 
         this.stopMusic();
