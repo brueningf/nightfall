@@ -59,7 +59,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onNewGame, onContinue, onOpe
                 )}
             </div>
 
-            <div className="relative z-20 flex flex-col gap-8 w-full max-w-[320px] items-center">
+            <div className="relative z-20 flex flex-col space-y-8 w-full max-w-[320px] items-center">
                 {canContinue && (
                     <button className="bg-[#1a1a1a] border border-[#444] text-[#ccc] py-5 px-6 text-sm uppercase cursor-pointer transition-all duration-200 flex items-center justify-center gap-4 w-full hover:bg-[#333] hover:border-[#666] hover:text-white hover:translate-x-1"
                         onClick={() => {

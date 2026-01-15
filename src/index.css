@@ -1,17 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-* {
-    box-sizing: border-box;
-    /* Safety net for elements overflowing */
-    max-width: 100%;
+@theme {
+    --color-bg: #050505;
+    --color-panel: #0f0f15;
+    --color-primary: #00ccff;
+    --color-secondary: #cc33ff;
+    --color-success: #33ff99;
+    --color-warning: #ffcc00;
+    --color-danger: #ff3333;
+
+    --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
 }
 
 html {
     width: 100%;
     overflow-x: hidden;
-    /* Prevent horizontal scroll globally */
 }
 
 #root {
@@ -20,19 +24,8 @@ html {
 }
 
 :root {
-    --color-bg: #050505;
-    /* Deep Void */
-    --color-panel: #0f0f15;
-    /* Dark Hull */
+    /* Legacy vars mappings just in case, but @theme handles utility generation */
     --color-text: #e0e0e0;
-    /* ... rest of vars ... */
-    --color-primary: #00ccff;
-    --color-secondary: #cc33ff;
-    --color-success: #33ff99;
-    --color-warning: #ffcc00;
-
-    --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: 'Courier New', Courier, monospace;
 }
 
 body {
@@ -41,18 +34,13 @@ body {
     color: var(--color-text);
     line-height: 1.5;
     height: 100dvh;
-    /* Use dynamic viewport height */
     width: 100%;
-    /* Changed from 100vw to 100% to avoid scrollbar width issues */
-    max-width: 100%;
     overflow: hidden;
-    /* Prevent body scroll */
     -webkit-font-smoothing: antialiased;
     margin: 0;
     overscroll-behavior: none;
     touch-action: manipulation;
     position: fixed;
-    /* Lock body in place */
     inset: 0;
 }
 
