@@ -195,7 +195,7 @@ export const INITIAL_STATE: GameState = {
     maxWallHealth: 100,
     demonStrength: 5, // Starts low
     scoutReport: "Scouts report minimal activity.",
-    eventLog: ["Welcome to NightFall 2.0. The Long Night has begun."],
+    eventLog: ["The Long Night has begun. Survive.", "Welcome to NightFall."],
     gameOver: false,
     victory: false,
     difficulty: 'VETERAN',

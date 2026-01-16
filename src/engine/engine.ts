@@ -7,7 +7,6 @@ const FARMING_YIELD = 5; // Food per farmer (Boosted for growth support)
 const BUILD_YIELD = 5; // Wall HP per miner
 const RESEARCH_YIELD = 5; // Knowledge per scientist (Boosted for quick Tier 1)
 const SHARD_YIELD = 0.5; // Shards per miner per day
-const BASE_DEMON_GROWTH = 1.2; // Multiplier per turn
 
 // Stance Modifiers
 const MAN_WALLS_DEFENSE_MOD = 1.5;
@@ -215,17 +214,22 @@ export function processTurn(currentState: GameState, newAllocation?: { farmers: 
         }
     }
 
-    // 4. Update Demon Strength
-    const growth = BASE_DEMON_GROWTH * (1 + (state.turn * 0.1));
+    // 4. Update Demon Strength (Percentage Based Growth)
+    // Old: BASE_DEMON_GROWTH * (1 + (state.turn * 0.1))
+    // New: +X% per turn based on difficulty
+    let growthRate = 0.05; // Base 5% growth
+    if (state.difficulty === 'RECRUIT') growthRate = 0.02;
+    if (state.difficulty === 'VETERAN') growthRate = 0.05;
+    if (state.difficulty === 'COMMANDER') growthRate = 0.08;
+    if (state.difficulty === 'LEGEND') growthRate = 0.12;
 
-    // Difficulty Multiplier
-    let diffMult = 1.0;
-    if (state.difficulty === 'RECRUIT') diffMult = 0.7;
-    if (state.difficulty === 'VETERAN') diffMult = 1.0;
-    if (state.difficulty === 'COMMANDER') diffMult = 1.5;
-    if (state.difficulty === 'LEGEND') diffMult = 2.5;
+    // Additive growth + Percentage compound
+    const flatGrowth = 2 + (state.turn * 0.5);
+    state.demonStrength = (state.demonStrength + flatGrowth) * (1 + growthRate);
 
-    state.demonStrength += Math.max(0.1, (growth * diffMult) - (state.population.scientists * 0.05));
+    // Scientists reduce growth slightly (Smart Defense) - Cap reduction to avoid negative
+    const reduction = Math.min(state.demonStrength * 0.1, state.population.scientists * 0.005);
+    state.demonStrength -= reduction;
 
     // 5. Game Over Check
     if (state.wallHealth <= 0) {
@@ -276,7 +280,12 @@ export function processTurn(currentState: GameState, newAllocation?: { farmers: 
     if (state.hero.cooldown > 0) state.hero.cooldown -= 1;
 
     // 7. Update Intelligence
-    state.scoutReport = `Scouts report ${Math.floor(state.demonStrength)}-${Math.ceil(state.demonStrength * 1.5)} demons.`;
+    const scoutMin = Math.floor(state.demonStrength * 0.9);
+    const scoutMax = Math.ceil(state.demonStrength * 1.2);
+    state.scoutReport = `Scouts report ${scoutMin}-${scoutMax} demons gathering.`;
+
+    // Log the scout report
+    log.push(state.scoutReport);
 
     // 8. Final Stand Logic
     if (state.finalStand.active) {
