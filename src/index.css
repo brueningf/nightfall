@@ -15,7 +15,10 @@
 
 html {
     width: 100%;
-    overflow-x: hidden;
+    height: 100%;
+    /* Fix: ensure html is full height */
+    overflow: hidden;
+    /* Fix: prevent html scroll */
 }
 
 #root {
@@ -34,13 +37,16 @@ body {
     color: var(--color-text);
     line-height: 1.5;
     height: 100dvh;
+    /* Use dynamic viewport height */
     width: 100%;
     overflow: hidden;
+    /* Fix: strictly no scroll on body */
     -webkit-font-smoothing: antialiased;
     margin: 0;
     overscroll-behavior: none;
     touch-action: manipulation;
     position: fixed;
+    /* Fix: Lock body in place */
     inset: 0;
 }
 
@@ -138,4 +144,26 @@ body {
     right: 10px;
     color: #444;
     font-size: 0.7rem;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(10, 10, 16, 0.5);
+    border-left: 1px solid #222;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #00ccff;
+    /* Hardcoded Primary */
+    border-radius: 3px;
+    border: 1px solid #000;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #33d6ff;
+    cursor: pointer;
 }

@@ -32,18 +32,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
     const [activeTab, setActiveTab] = useState<'GAME' | 'MAP' | 'LOG' | 'TECH'>('GAME');
 
     return (
-        <div className="flex flex-col gap-2.5 flex-1 p-2.5 bg-[radial-gradient(circle_at_center,_#1a1a20_0%,_#000_100%)]">
-            <header className="flex justify-between bg-panel/90 text-[0.85rem] border-y border-[#333] shrink-0 items-center h-8 px-2.5">
-                <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-2.5 flex-1 p-2.5 bg-[radial-gradient(circle_at_center,_#1a1a20_0%,_#000_100%)] min-h-0">
+            <header className="flex justify-between bg-panel/90 text-[0.8rem] border-y border-[#333] shrink-0 items-center h-8 px-2">
+                <div className="flex items-center gap-3">
                     <div className="font-bold">SOL {state.turn}</div>
-                    <div className="w-px h-3.5 bg-[#333]"></div>
-                    <div className="text-success flex items-center gap-2">
+                    <div className="w-px h-3 bg-[#333]"></div>
+                    <div className="text-success flex items-center gap-1.5">
                         <Icon icon="game-icons:electric" /> {Math.floor(state.resources.food)}
                     </div>
-                    <div className="text-secondary flex items-center gap-2">
+                    <div className="text-secondary flex items-center gap-1.5">
                         <Icon icon="game-icons:crystal-shrine" /> {Math.floor(state.resources.shards)}
                     </div>
-                    <div className="text-[#aaa] flex items-center gap-2">
+                    <div className="text-[#aaa] flex items-center gap-1.5">
                         <Icon icon="game-icons:person" /> {Math.floor(state.population.total)}
                     </div>
                 </div>
@@ -54,7 +54,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                 </div>
             </header>
 
-            <nav className="flex gap-0.5 mb-1.5 bg-black/50 p-0.5 border border-[#333]">
+            <nav className="flex gap-0.5 mb-0.5 bg-black/50 p-0.5 border border-[#333] shrink-0">
                 <NavButton
                     active={activeTab === 'GAME'}
                     onClick={() => setActiveTab('GAME')}
@@ -81,25 +81,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                 />
             </nav>
 
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
                 {activeTab === 'GAME' && (
-                    <div className="overflow-y-auto pb-5">
+                    <div className="overflow-y-auto pb-5 scrollbar-hidden">
                         <VisualFortress state={state} />
 
-                        <div className="relative z-10 p-2.5 bg-black/80 border-t border-[#333] backdrop-blur-sm">
-                            <div className="mb-2 text-xs text-white z-10 font-mono">
+                        <div className="relative z-10 p-1.5 bg-black/80 border-t border-[#333] backdrop-blur-sm">
+                            <div className="mb-1 text-[0.7rem] text-white z-10 font-mono">
                                 HULL INTEGRITY: {Math.floor(state.wallHealth)} / {state.maxWallHealth}
-                                <div className="w-full h-1.5 bg-[#222] overflow-hidden mt-1 border border-[#444]">
+                                <div className="w-full h-1.5 bg-[#222] overflow-hidden mt-0.5 border border-[#444]">
                                     <div
                                         className="h-full bg-primary transition-[width] duration-300 shadow-[0_0_5px_var(--color-primary)]"
                                         style={{ width: `${(state.wallHealth / state.maxWallHealth) * 100}%` }}
                                     ></div>
                                 </div>
                             </div>
-                            <div className="text-xs text-danger flex items-center justify-between mt-1.5 pt-1.5 border-t border-[#222]">
+                            <div className="text-xs text-danger flex items-center justify-between mt-1 pt-1 border-t border-[#222]">
                                 {/* Left: Action */}
                                 <button
-                                    className="w-auto px-6 py-3 bg-primary text-black border-none text-[1rem] font-bold cursor-pointer uppercase transition-all tracking-[1px] m-0 shrink-0 shadow-[0_0_10px_rgba(0,204,255,0.3)] hover:bg-[#33d6ff] hover:shadow-[0_0_15px_rgba(0,204,255,0.5)] hover:-translate-y-px disabled:bg-[#333] disabled:text-[#666] disabled:cursor-not-allowed disabled:shadow-none"
+                                    className="w-auto px-4 py-2 bg-primary text-black border-none text-[0.85rem] font-bold cursor-pointer uppercase transition-all tracking-[1px] m-0 shrink-0 shadow-[0_0_10px_rgba(0,204,255,0.3)] hover:bg-[#33d6ff] hover:shadow-[0_0_15px_rgba(0,204,255,0.5)] hover:-translate-y-px disabled:bg-[#333] disabled:text-[#666] disabled:cursor-not-allowed disabled:shadow-none"
                                     onClick={onNextTurn}
                                     disabled={state.gameOver}
                                 >
@@ -109,31 +109,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ state, onAllocate, onNextT
                                 {/* Right: Info & Purge */}
                                 <div className="text-right flex flex-col items-end">
                                     <div>
-                                        <span className="font-bold text-danger uppercase">VOID THREAT:</span> {state.demonStrength.toFixed(1)}
+                                        <span className="font-bold text-danger uppercase text-[0.7rem]">VOID THREAT:</span> {state.demonStrength.toFixed(1)}
                                     </div>
-                                    <div className="italic text-[#888] text-[0.7rem] mb-1">{state.scoutReport}</div>
+                                    <div className="italic text-[#888] text-[0.65rem] mb-0.5">{state.scoutReport}</div>
 
                                     <button
                                         onClick={onBanish}
                                         disabled={state.resources.shards < 100}
-                                        className="bg-[rgba(204,51,255,0.2)] border border-secondary text-secondary px-2 py-0.5 text-[0.7rem] cursor-pointer font-bold uppercase disabled:opacity-50 hover:bg-secondary hover:text-black transition-colors"
+                                        className="bg-[rgba(204,51,255,0.2)] border border-secondary text-secondary px-2 py-0.5 text-[0.65rem] cursor-pointer font-bold uppercase disabled:opacity-50 hover:bg-secondary hover:text-black transition-colors"
                                         title="Cost: 100 Shards"
                                     >
-                                        INITIATE PURGE (-2)
+                                        In. PURGE (-2)
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         {/* Defense Controls (Compact) */}
-                        <DefenseControls
-                            currentStance={state.stance}
-                            hero={state.hero}
-                            onSetStance={onSetStance}
-                        />
+                        <div className="mt-1">
+                            <DefenseControls
+                                currentStance={state.stance}
+                                hero={state.hero}
+                                onSetStance={onSetStance}
+                            />
+                        </div>
 
                         {/* Allocation Controls (Percentage Based) */}
-                        <div className="mt-2.5">
+                        <div className="mt-1">
                             <Allocation
                                 state={state}
                                 allocation={state.allocation}
