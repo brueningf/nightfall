@@ -48,6 +48,7 @@ export interface Tech {
     description: string;
     cost: number;
     unlocked: boolean;
+    prerequisite?: TechId;
 }
 
 export type GameState = {
@@ -166,21 +167,24 @@ export const INITIAL_STATE: GameState = {
             name: "Atmospheric Condensers",
             description: "+25% Food Production (Tier 2)",
             cost: 120,
-            unlocked: false
+            unlocked: false,
+            prerequisite: 'CROP_ROTATION'
         },
         'IRON_ARMOR': {
             id: 'IRON_ARMOR',
             name: "Plasteel Plating", // Space Theme
             description: "+20% Defense (Tier 2)",
             cost: 120,
-            unlocked: false
+            unlocked: false,
+            prerequisite: 'STEEL_WEAPONS'
         },
         'OBSIDIAN_WALLS': {
             id: 'OBSIDIAN_WALLS',
             name: "Obsidian Composites",
             description: "+50% Wall Health (Tier 2)",
             cost: 150,
-            unlocked: false
+            unlocked: false,
+            prerequisite: 'MASONRY'
         },
         'CORE_STABILIZATION': {
             id: 'CORE_STABILIZATION',

@@ -67,84 +67,136 @@ export const ResearchScreen: React.FC<ResearchScreenProps> = ({ state, onBack, o
 
             {/* Scrollable List */}
             <div className="flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 custom-scrollbar relative">
-                {Object.values(state.techs).map((tech) => {
-                    const isActive = state.activeResearchId === tech.id;
-                    const progress = state.researchProgress[tech.id] || 0;
-                    const percent = Math.min(100, (progress / tech.cost) * 100);
-                    const remaining = tech.cost - progress;
-                    const daysLeft = dailyOutput > 0 ? Math.ceil(remaining / dailyOutput) : '∞';
+                {/* Tech Chains */}
+                {(() => {
+                    const chains: TechId[][] = [
+                        ['CROP_ROTATION', 'HEAVY_PLOW'],
+                        ['MASONRY', 'OBSIDIAN_WALLS'],
+                        ['STEEL_WEAPONS', 'IRON_ARMOR'],
+                        ['ARCANE_STUDIES'],
+                        ['CORE_STABILIZATION']
+                    ];
 
-                    const isIgnition = tech.id === 'CORE_STABILIZATION';
+                    return chains.map((chain, index) => {
+                        // Find the current active tech in the chain (first not unlocked)
+                        // Or the last one if all are unlocked
+                        let activeTechId = chain.find(id => !state.techs[id].unlocked);
+                        let isFullyUpgraded = false;
 
-                    let cardBg = 'bg-[#121218]';
-                    let cardBorder = 'border-[#333]';
-                    let opacity = 'opacity-100';
+                        if (!activeTechId) {
+                            activeTechId = chain[chain.length - 1];
+                            isFullyUpgraded = true;
+                        }
 
-                    if (tech.unlocked) {
-                        cardBg = 'bg-[rgba(0,204,255,0.08)]';
-                        opacity = 'opacity-70';
-                    } else if (isActive) {
-                        cardBg = 'bg-[rgba(0,204,255,0.05)]';
-                        cardBorder = 'border-primary';
-                    }
+                        const tech = state.techs[activeTechId];
+                        const isActive = state.activeResearchId === tech.id;
+                        const progress = state.researchProgress[tech.id] || 0;
+                        const percent = Math.min(100, (progress / tech.cost) * 100);
+                        const remaining = tech.cost - progress;
+                        const daysLeft = dailyOutput > 0 ? Math.ceil(remaining / dailyOutput) : '∞';
 
-                    return (
-                        <div key={tech.id} className={`shrink-0 ${cardBg} border ${cardBorder} rounded p-1.5 flex gap-2 items-center relative overflow-hidden transition-all ${opacity} min-h-[50px]`}>
-                            {/* Icon Column */}
-                            <div className={`text-xl flex items-center justify-center w-[40px] shrink-0 ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#555]'}`}>
-                                <Icon icon={getIconForTech(tech.id)} />
-                            </div>
+                        const isIgnition = tech.id === 'CORE_STABILIZATION';
 
-                            {/* Info Column */}
-                            <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                <div className="flex justify-between items-center mb-0.5">
-                                    <h3 className={`m-0 text-[0.8rem] font-bold uppercase leading-tight ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#ddd]'}`}>
-                                        {tech.name}
-                                    </h3>
-                                    {tech.unlocked && <Icon icon="game-icons:check-mark" className="text-success text-xs" />}
-                                </div>
-                                <p className="m-0 text-[0.65rem] text-[#888] leading-[1.1] pr-1">{tech.description}</p>
+                        let cardBg = 'bg-[#121218]';
+                        let cardBorder = 'border-[#333]';
+                        let opacity = 'opacity-100';
 
-                                {/* Progress Bar for Active/In-Progress */}
-                                {!tech.unlocked && (
-                                    <div className="mt-1 text-[0.65rem] text-[#666] flex items-center gap-2">
-                                        <div className="flex-1 h-1 bg-[#222] rounded overflow-hidden">
-                                            <div style={{ width: `${percent}%` }} className={`h-full ${isActive ? 'bg-primary' : 'bg-[#444]'}`}></div>
+                        if (isFullyUpgraded) {
+                            cardBg = 'bg-[rgba(0,204,255,0.08)]';
+                            opacity = 'opacity-70';
+                        } else if (isActive) {
+                            cardBg = 'bg-[rgba(0,204,255,0.05)]';
+                            cardBorder = 'border-primary';
+                        }
+
+                        // Collect History
+                        const history = chain.filter(id => state.techs[id].unlocked && id !== activeTechId);
+                        // If fully upgraded, the activeTechId is also "history" effectively, but we render it as the main card body
+                        // actually if fully upgraded, we might want to just show the "History" of everything?
+                        // Let's stick to the plan: Main card is the current state.
+
+                        return (
+                            <div key={index} className={`shrink-0 ${cardBg} border ${cardBorder} rounded p-2 flex flex-col gap-2 relative overflow-hidden transition-all ${opacity}`}>
+
+                                {/* History Section (Previous Tiers) */}
+                                {history.length > 0 && (
+                                    <div className="flex flex-col gap-1 pb-2 border-b border-white/10 mb-1">
+                                        {history.map(histId => {
+                                            const histTech = state.techs[histId];
+                                            return (
+                                                <div key={histId} className="flex gap-2 items-center opacity-60">
+                                                    <Icon icon="game-icons:check-mark" className="text-success text-xs shrink-0" />
+                                                    <div className="text-[0.65rem] text-[#aaa]">
+                                                        <span className="text-success font-bold mr-1">{histTech.name}:</span>
+                                                        {histTech.description}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+
+                                {/* Active Tier Section */}
+                                <div className="flex gap-2 items-center min-h-[50px]">
+                                    {/* Icon Column */}
+                                    <div className={`text-xl flex items-center justify-center w-[40px] shrink-0 ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#555]'}`}>
+                                        <Icon icon={getIconForTech(tech.id)} />
+                                    </div>
+
+                                    {/* Info Column */}
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className="flex justify-between items-center mb-0.5">
+                                            <h3 className={`m-0 text-[0.8rem] font-bold uppercase leading-tight ${tech.unlocked ? 'text-success' : isActive ? 'text-primary' : 'text-[#ddd]'}`}>
+                                                {tech.name}
+                                            </h3>
+                                            {tech.unlocked && <Icon icon="game-icons:check-mark" className="text-success text-xs" />}
                                         </div>
-                                        <span className="font-mono">{Math.floor(percent)}%</span>
-                                    </div>
-                                )}
-                            </div>
+                                        <p className="m-0 text-[0.65rem] text-[#888] leading-[1.1] pr-1">{tech.description}</p>
 
-                            {/* Action Column */}
-                            <div className="shrink-0 w-[80px] flex justify-end items-center">
-                                {isIgnition && tech.unlocked ? (
-                                    <button
-                                        onClick={onIgnite}
-                                        className="bg-[#ffd700] text-black border-none font-bold px-2 py-1.5 cursor-pointer text-[0.7rem] rounded flex flex-col items-center leading-none hover:brightness-110 shadow-[0_0_10px_rgba(255,215,0,0.5)]"
-                                    >
-                                        <span>IGNITE</span>
-                                        <span className="text-[0.6rem]">2000 💠</span>
-                                    </button>
-                                ) : tech.unlocked ? (
-                                    <div className="text-[0.65rem] text-success border border-success px-1 py-0.5 rounded font-bold uppercase tracking-wide">ACQUIRED</div>
-                                ) : isActive ? (
-                                    <div className="text-center text-primary text-[0.7rem] leading-tight">
-                                        <div className="font-bold">{daysLeft} Days</div>
-                                        <div className="text-[0.6rem] opacity-80">Running</div>
+                                        {/* Progress Bar for Active/In-Progress */}
+                                        {!tech.unlocked && (
+                                            <div className="mt-1 text-[0.65rem] text-[#666] flex items-center gap-2">
+                                                <div className="flex-1 h-1 bg-[#222] rounded overflow-hidden">
+                                                    <div style={{ width: `${percent}%` }} className={`h-full ${isActive ? 'bg-primary' : 'bg-[#444]'}`}></div>
+                                                </div>
+                                                <span className="font-mono">{Math.floor(percent)}%</span>
+                                            </div>
+                                        )}
                                     </div>
-                                ) : (
-                                    <button
-                                        onClick={() => onResearch(tech.id)}
-                                        className="bg-transparent text-primary border border-primary px-2 py-1 text-[0.7rem] cursor-pointer uppercase transition-colors hover:bg-primary hover:text-black font-bold"
-                                    >
-                                        Start ({tech.cost})
-                                    </button>
-                                )}
+
+                                    {/* Action Column */}
+                                    <div className="shrink-0 w-[80px] flex justify-end items-center">
+                                        {isIgnition && tech.unlocked ? (
+                                            <button
+                                                onClick={onIgnite}
+                                                className="bg-[#ffd700] text-black border-none font-bold px-2 py-1.5 cursor-pointer text-[0.7rem] rounded flex flex-col items-center leading-none hover:brightness-110 shadow-[0_0_10px_rgba(255,215,0,0.5)]"
+                                            >
+                                                <span>IGNITE</span>
+                                                <span className="text-[0.6rem]">2000 💠</span>
+                                            </button>
+                                        ) : tech.unlocked ? (
+                                            <div className="text-[0.65rem] text-success border border-success px-1 py-0.5 rounded font-bold uppercase tracking-wide">MAX TIER</div>
+                                        ) : isActive ? (
+                                            <div className="text-center text-primary text-[0.7rem] leading-tight">
+                                                <div className="font-bold">{daysLeft} Days</div>
+                                                <div className="text-[0.6rem] opacity-80">Running</div>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => onResearch(tech.id)}
+                                                className="bg-transparent text-primary border border-primary px-2 py-1 text-[0.7rem] cursor-pointer uppercase transition-colors hover:bg-primary hover:text-black font-bold"
+                                            >
+                                                Start ({tech.cost})
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    });
+                })()}
+
+                {/* Fallback for anything not in a chain? (Strictly mapped above for now) */}
             </div>
         </div>
     );

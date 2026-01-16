@@ -62,6 +62,11 @@ export function startResearch(currentState: GameState, techId: TechId): GameStat
     const state = JSON.parse(JSON.stringify(currentState));
     const tech = state.techs[techId];
     if (tech && !tech.unlocked) {
+        // Check Prerequisite
+        if (tech.prerequisite && !state.techs[tech.prerequisite].unlocked) {
+            return currentState; // Locked
+        }
+
         state.activeResearchId = techId;
         state.eventLog = [`Started research on ${tech.name}.`, ...state.eventLog];
     }
