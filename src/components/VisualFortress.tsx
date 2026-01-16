@@ -23,7 +23,7 @@ export const VisualFortress: React.FC<VisualFortressProps> = ({ state }) => {
     const fireOpacity = isDamageHigh ? 1 - (state.wallHealth / (state.maxWallHealth * 0.5)) : 0;
 
     return (
-        <div className="relative w-full h-[200px] overflow-hidden bg-black border border-[#333] shrink-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
+        <div className="relative w-full h-[160px] overflow-hidden bg-black border border-[#333] shrink-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
             {/* Notifications Overlay */}
             <VisualNotifications notifications={state.notifications} currentTurn={state.turn} />
 

@@ -9,33 +9,36 @@ interface AllocationProps {
     isProcessing: boolean;
 }
 
-const ControlRow = ({ label, role, percentage, onAdjust, isProcessing, canIncrease, details }: {
-    label: React.ReactNode,
-    role: keyof AllocationPolicy,
-    percentage: number,
-    onAdjust: (role: keyof AllocationPolicy, change: number) => void,
-    isProcessing: boolean,
-    canIncrease: boolean,
-    details: string
-}) => (
-    <div className="bg-panel p-2 border border-[#2a2a35] rounded-sm">
+interface ControlRowProps {
+    label: React.ReactNode;
+    role: keyof AllocationPolicy;
+    percentage: number;
+    onAdjust: (role: keyof AllocationPolicy, change: number) => void;
+    isProcessing: boolean;
+    canIncrease: boolean;
+    stat: string; // New prop for the compact stat
+    statColor?: string;
+}
+
+const ControlRow = ({ label, role, percentage, onAdjust, isProcessing, canIncrease, stat, statColor = "text-[#888]" }: ControlRowProps) => (
+    <div className="bg-panel p-1.5 border border-[#2a2a35] rounded-sm h-full flex flex-col justify-between" title={stat}>
         <div className="flex justify-between items-center mb-1">
-            <span className="text-[0.8rem] text-[#e0e0e0] font-bold flex items-center gap-1.5">{label}</span>
-            <span className="text-xs text-[#888]">{details}</span>
+            <span className="text-[0.65rem] text-[#e0e0e0] font-bold flex items-center gap-1.5 whitespace-nowrap">{label}</span>
+            <span className={`text-[0.6rem] font-mono ${statColor}`}>{stat}</span>
         </div>
-        <div className="flex items-center gap-2 justify-end">
+        <div className="flex items-center gap-1 justify-between bg-black/20 rounded p-0.5">
             <button
-                className="bg-transparent border border-[#5a2d2d] w-6 h-6 flex justify-center items-center cursor-pointer font-bold text-danger hover:border-danger hover:bg-[#222] disabled:opacity-20 disabled:cursor-not-allowed disabled:border-[#333]"
+                className="bg-[#2a0e0e] border border-[#5a2d2d] w-5 h-5 flex justify-center items-center cursor-pointer font-bold text-danger hover:border-danger hover:bg-[#4a1a1a] disabled:opacity-30 disabled:cursor-not-allowed text-xs rounded-sm"
                 onClick={() => onAdjust(role, -5)}
                 disabled={isProcessing || percentage <= 0}
             >-</button>
 
-            <div className="font-mono text-white min-w-[35px] text-center">
-                <span className="text-white">{percentage}%</span>
+            <div className="font-mono text-white min-w-[28px] text-center text-sm font-bold">
+                {percentage}%
             </div>
 
             <button
-                className="bg-transparent border border-[#2d5a45] w-6 h-6 flex justify-center items-center cursor-pointer font-bold text-success hover:border-success hover:bg-[#222] disabled:opacity-20 disabled:cursor-not-allowed disabled:border-[#333]"
+                className="bg-[#0e2a1a] border border-[#2d5a45] w-5 h-5 flex justify-center items-center cursor-pointer font-bold text-success hover:border-success hover:bg-[#1a4a2a] disabled:opacity-30 disabled:cursor-not-allowed text-xs rounded-sm"
                 onClick={() => onAdjust(role, 5)}
                 disabled={isProcessing || !canIncrease}
             >+</button>
@@ -48,39 +51,57 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
     const totalAllocated = allocation.farmers + allocation.miners + allocation.soldiers;
     const scientistPercentage = 100 - totalAllocated;
 
-    // Helper to estimate yield based on percentage
-    const getEstimate = (role: 'farmers' | 'miners' | 'soldiers' | 'scientists', pct: number) => {
+    // --- Stat Calculation Logic (Replicated/Simplified from Engine) ---
+    const getCompactStat = (role: 'farmers' | 'miners' | 'soldiers' | 'scientists', pct: number) => {
         const count = Math.floor(state.population.total * (pct / 100));
 
         if (role === 'farmers') {
-            let yieldPer = 5; // Base
+            // Growth Calculation
+            // Production
+            let yieldPer = 5;
             if (state.techs['CROP_ROTATION'].unlocked) yieldPer *= 1.25;
             if (state.techs['HEAVY_PLOW'].unlocked) yieldPer *= 1.25;
-            // Season ignored for simple preview, or could include? Let's genericize.
-            // Growth calc preview
-            // Growth calc preview
-            // const totalPop = state.population.total || 1;
             const production = count * yieldPer;
-            // Let's just say "Supports +X Pop/Day"
-            return `~${Math.floor(production)} Food/day (${Math.floor(production / 1)} fed)`;
+
+            // Consumption & Surplus
+            const consumption = state.population.total * 1; // 1 food per person
+            const surplus = production - consumption;
+
+            // Growth Formula roughly: 
+            // Natality = 0.15 + (SurplusPerCapita * 0.05)
+            // Growth = (Surplus * Natality) - (Pop * 0.05)
+
+            const surplusPerCapita = surplus / (state.population.total || 1);
+            const natality = 0.15 + (Math.max(0, surplusPerCapita) * 0.05);
+            const mortality = 0.05;
+
+            let growth = (surplus * natality) - (state.population.total * mortality);
+            if (state.resources.food <= 0 && growth > 0) growth = -state.population.total * 0.1; // Starvation fallback check visually
+
+            return growth > 0 ? `+${growth.toFixed(1)}/d` : `${growth.toFixed(1)}/d`;
         }
         if (role === 'miners') {
+            // Shards
             const shards = Math.floor(count * 0.5);
-            let repair = count * 5;
-            if (state.techs['MASONRY'].unlocked) repair *= 1.25;
-            if (state.techs['OBSIDIAN_WALLS'].unlocked) repair *= 1.50;
-            return `+${shards} Shards, +${Math.floor(repair)} Repair`;
+            return `+${shards}`;
         }
         if (role === 'soldiers') {
+            // Defense Power
             let power = count * 2;
             if (state.techs['STEEL_WEAPONS'].unlocked) power *= 1.25;
             if (state.techs['IRON_ARMOR'].unlocked) power *= 1.20;
-            return `Power: ${Math.floor(power)} (vs ${state.demonStrength.toFixed(0)})`;
+            // Note: Stance modifier not applied here to show "Base Strength", or should we? 
+            // Let's show base to avoid confusion when switching tabs, or applied? 
+            // User asked for "Strength". Let's show current effective strength? 
+            // Actually, usually easier to allocate if you see the raw power of the allocation. 
+            // Let's stick to raw soldier power for allocation purposes.
+            return `${Math.floor(power)}`;
         }
         if (role === 'scientists') {
+            // Knowledge
             let knowledge = count * 5;
             if (state.techs['ARCANE_STUDIES'].unlocked) knowledge *= 1.25;
-            return `+${Math.floor(knowledge)} Knowledge/day`;
+            return `+${Math.floor(knowledge)}`;
         }
         return '';
     };
@@ -97,11 +118,11 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
     };
 
     return (
-        <div className="bg-[#101015] p-3 border border-[#333]">
-            <div className="flex flex-col items-start gap-1 pb-2 border-b border-[#333] mb-3">
-                <h3 className="text-[0.65rem] m-0 text-[#888] tracking-widest uppercase">CREW ASSIGNMENTS</h3>
+        <div className="bg-[#101015] p-2 border border-[#333]">
+            <div className="flex flex-col items-start gap-1 pb-1 border-b border-[#333] mb-2">
+                <h3 className="text-[0.6rem] m-0 text-[#888] tracking-widest uppercase">CREW ASSIGNMENTS</h3>
                 {/* Visual Bar of Distribution */}
-                <div className="h-1.5 w-full bg-[#222] flex rounded-none overflow-hidden mt-1">
+                <div className="h-1 w-full bg-[#222] flex rounded-none overflow-hidden mt-0.5">
                     <div style={{ width: `${allocation.farmers}%` }} className="bg-success" title="Farmers"></div>
                     <div style={{ width: `${allocation.miners}%` }} className="bg-secondary" title="Miners"></div>
                     <div style={{ width: `${allocation.soldiers}%` }} className="bg-danger" title="Soldiers"></div>
@@ -109,39 +130,43 @@ export const Allocation: React.FC<AllocationProps> = ({ state, allocation, onAll
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-2 gap-1.5">
                 <ControlRow
-                    label={<><Icon icon="game-icons:wheat" color="#2ecc71" /> HYDROPONICS</>} role="farmers"
+                    label={<><Icon icon="game-icons:wheat" color="#2ecc71" /> FOOD</>} role="farmers"
                     percentage={allocation.farmers}
                     onAdjust={handleChange} isProcessing={isProcessing} canIncrease={totalAllocated < 100}
-                    details={getEstimate('farmers', allocation.farmers)}
+                    stat={getCompactStat('farmers', allocation.farmers)}
+                    statColor="text-success"
                 />
                 <ControlRow
-                    label={<><Icon icon="game-icons:drill" color="#3498db" /> EXTRACTORS</>} role="miners"
+                    label={<><Icon icon="game-icons:drill" color="#3498db" /> SHARDS</>} role="miners"
                     percentage={allocation.miners}
                     onAdjust={handleChange} isProcessing={isProcessing} canIncrease={totalAllocated < 100}
-                    details={getEstimate('miners', allocation.miners)}
+                    stat={getCompactStat('miners', allocation.miners)}
+                    statColor="text-secondary"
                 />
                 <ControlRow
-                    label={<><Icon icon="game-icons:police-badge" color="#00ccff" /> SECURITY</>} role="soldiers"
+                    label={<><Icon icon="game-icons:police-badge" color="#00ccff" /> GUARD</>} role="soldiers"
                     percentage={allocation.soldiers}
                     onAdjust={handleChange} isProcessing={isProcessing} canIncrease={totalAllocated < 100}
-                    details={getEstimate('soldiers', allocation.soldiers)}
+                    stat={getCompactStat('soldiers', allocation.soldiers)}
+                    statColor="text-danger"
                 />
 
                 {/* Scientists are passive/free */}
-                <div className="bg-[rgba(0,204,255,0.05)] p-2 border border-primary rounded-sm">
-                    <div className="flex justify-between items-center mb-1">
-                        <span className="text-[0.8rem] text-[#e0e0e0] font-bold flex items-center gap-1.5"><Icon icon="game-icons:microscope" /> RESEARCH</span>
-                        <span className="text-xs text-[#888]">{getEstimate('scientists', scientistPercentage)}</span>
+                <div className="bg-[rgba(0,204,255,0.05)] p-1.5 border border-primary rounded-sm h-full flex flex-col justify-between">
+                    <div className="flex justify-between items-center mb-0.5">
+                        <span className="text-[0.65rem] text-[#e0e0e0] font-bold flex items-center gap-1.5 whitespace-nowrap"><Icon icon="game-icons:microscope" /> TECH</span>
+                        <span className="text-[0.6rem] font-mono text-primary">{getCompactStat('scientists', scientistPercentage)}</span>
                     </div>
-                    <div className="flex items-center gap-2 justify-end">
-                        <div className="font-mono text-primary text-center">
+                    <div className="flex items-center gap-2 justify-end mt-auto">
+                        <div className="font-mono text-primary text-center text-sm">
                             <span className="text-primary">{scientistPercentage}%</span>
                         </div>
                     </div>
                 </div>
             </div>
+            {/* Summary Footer for Details (Optional, or just tooltip?) - Let's keep it simple for now */}
         </div>
     );
 };

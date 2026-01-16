@@ -43,6 +43,3 @@ export const HeroIcon = ({ className = "" }: { level?: number, className?: strin
         color="#ffd700"
     />
 );
-
-// Particle effects can still be CSS, but let's make a simple SVG overlay for snow if needed
-// But CSS particles are usually better for snow.
